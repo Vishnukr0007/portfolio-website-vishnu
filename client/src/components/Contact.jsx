@@ -51,19 +51,30 @@ const Contact = () => {
                 </a>
 
                 {socials.length > 0 && (
-                    <div className="flex justify-center gap-6 mt-16">
-                        {socials.map((social) => (
-                            <a
-                                key={social._id}
-                                href={social.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"
-                                title={social.platform}
-                            >
-                                {getIcon(social.platform)}
-                            </a>
-                        ))}
+                    <div className="flex flex-col items-center gap-8 mt-16">
+                        <div className="flex justify-center gap-6">
+                            {socials.map((social) => (
+                                <a
+                                    key={social._id}
+                                    href={social.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"
+                                    title={social.platform}
+                                >
+                                    {getIcon(social.platform)}
+                                </a>
+                            ))}
+                        </div>
+
+                        <a
+                            href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/resume/download`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-all flex items-center gap-2 underline underline-offset-4 decoration-primary-light/30 dark:decoration-primary-dark/30"
+                        >
+                            Download My Resume (PDF)
+                        </a>
                     </div>
                 )}
             </div>

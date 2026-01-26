@@ -40,8 +40,13 @@ const Hero = () => {
                             <a href="#projects" className="px-8 py-4 rounded-full bg-primary-light dark:bg-primary-dark text-white dark:text-black font-bold shadow-lg shadow-primary-light/30 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all">
                                 View Work
                             </a>
-                            <a href="#contact" className="px-8 py-4 rounded-full border-2 border-primary-light/20 dark:border-primary-dark/20 text-primary-light dark:text-primary-dark font-semibold hover:bg-primary-light/5 dark:hover:bg-primary-dark/5 transition-all text-center">
-                                Contact Me
+                            <a
+                                href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/resume/download`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="px-8 py-4 rounded-full border-2 border-primary-light/20 dark:border-primary-dark/20 text-primary-light dark:text-primary-dark font-semibold hover:bg-primary-light/5 dark:hover:bg-primary-dark/5 transition-all text-center flex items-center justify-center gap-2"
+                            >
+                                Download Resume
                             </a>
                         </motion.div>
                     </div>
