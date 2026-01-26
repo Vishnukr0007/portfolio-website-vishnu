@@ -46,7 +46,10 @@ const Projects = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: idx * 0.1 }}
-                            className="group flex flex-col h-full bg-white dark:bg-card rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 hover:border-primary/50 dark:hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                            className="group flex flex-col h-full bg-card-light dark:bg-card-dark rounded-2xl overflow-hidden border border-gray-200 dark:border-primary-dark/80 hover:border-primary-light dark:hover:border-primary-dark transition-all duration-500 shadow-[0_10px_40px_-15px_rgba(217,119,6,0.15)] dark:shadow-none hover:shadow-[0_20px_50px_-12px_rgba(217,119,6,0.25)] dark:hover:shadow-[0_0_30px_0_rgba(255,191,0,0.2)] hover:-translate-y-2"
+                            style={{
+                                boxShadow: 'var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)'
+                            }}
                         >
                             {project.image && (
                                 <div className="aspect-video overflow-hidden bg-gray-100 dark:bg-black/40 flex items-center justify-center p-4">
@@ -59,20 +62,20 @@ const Projects = () => {
                             )}
                             <div className="p-8 flex flex-col flex-1">
                                 <div className="flex justify-between items-start mb-4 gap-3">
-                                    <h3 className="text-2xl font-bold dark:text-white group-hover:text-primary transition-colors leading-tight">{project.title}</h3>
+                                    <h3 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors leading-tight">{project.title}</h3>
                                     {project.category && (
-                                        <span className="shrink-0 px-2 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase rounded tracking-wider">
+                                        <span className="shrink-0 px-2 py-1 bg-primary-light/10 dark:bg-primary-dark/10 text-primary-light dark:text-primary-dark text-[10px] font-bold uppercase rounded tracking-wider">
                                             {project.category}
                                         </span>
                                     )}
                                 </div>
-                                <p className="text-gray-600 dark:text-text-secondary mb-6 line-clamp-4 leading-relaxed flex-1">
+                                <p className="text-text-secondary-light dark:text-text-secondary-dark mb-6 line-clamp-4 leading-relaxed flex-1">
                                     {project.description}
                                 </p>
 
                                 <div className="flex flex-wrap gap-2 mb-8">
                                     {project.tags?.map((tag, tIdx) => (
-                                        <span key={tIdx} className="px-3 py-1 bg-gray-100 dark:bg-white/10 rounded-full text-xs font-medium text-gray-500 dark:text-gray-400 group-hover:bg-primary/5 group-hover:text-primary transition-colors">
+                                        <span key={tIdx} className="px-3 py-1 bg-gray-100 dark:bg-white/10 rounded-full text-xs font-medium text-text-secondary-light dark:text-gray-400 group-hover:bg-primary-light/5 dark:group-hover:bg-primary-dark/5 group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors">
                                             {tag}
                                         </span>
                                     ))}
@@ -84,7 +87,7 @@ const Projects = () => {
                                             href={project.links.code}
                                             target="_blank"
                                             rel="noreferrer"
-                                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-white/5 text-sm font-semibold text-gray-700 dark:text-white hover:bg-primary hover:text-white dark:hover:bg-primary transition-all duration-300"
+                                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-white/5 text-sm font-semibold text-text-primary-light dark:text-text-primary-dark hover:bg-primary-light dark:hover:bg-primary-dark hover:text-white dark:hover:text-black transition-all duration-300"
                                         >
                                             <Github size={18} /> Code
                                         </a>
@@ -94,7 +97,7 @@ const Projects = () => {
                                             href={project.links.demo}
                                             target="_blank"
                                             rel="noreferrer"
-                                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary text-sm font-semibold hover:bg-primary hover:text-white transition-all duration-300"
+                                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary-light/10 dark:bg-primary-dark/10 text-primary-light dark:text-primary-dark text-sm font-semibold hover:bg-primary-light dark:hover:bg-primary-dark hover:text-white dark:hover:text-black transition-all duration-300"
                                         >
                                             <ExternalLink size={18} /> Live Demo
                                         </a>

@@ -4,8 +4,26 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-color: #f8fafc;
+  --text-main: #1a1a1a;
+  --text-secondary: #475569;
+  --accent-amber: #d97706;
+  --card-bg: #ffffff;
+}
+
+.dark {
+  --bg-color: #121212;
+  --text-main: #f8fafc;
+  --text-secondary: #a0a0a0;
+  --accent-amber: #ffbf00;
+  --card-bg: #1e1e1e;
+}
+
 @layer base {
   body {
-    @apply bg-white text-gray-900 dark:bg-dark dark:text-text-primary transition-colors duration-300;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    @apply transition-colors duration-300 font-sans;
   }
 }

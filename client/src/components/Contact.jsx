@@ -17,35 +17,35 @@ const Contact = () => {
     return (
         <section id="contact" className="py-24 bg-gray-50 dark:bg-black/20">
             <div className="container mx-auto px-6 text-center max-w-2xl">
-                <motion.h2 
+                <motion.h2
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-4xl font-bold font-heading mb-6 dark:text-white"
+                    className="text-4xl font-bold font-heading mb-6 text-text-primary-light dark:text-text-primary-dark"
                 >
-                    Let's <span className="text-primary">Connect</span>
+                    Let's <span className="text-primary-light dark:text-primary-dark">Connect</span>
                 </motion.h2>
 
-                <p className="text-lg text-gray-600 dark:text-text-secondary mb-12">
+                <p className="text-lg text-text-secondary-light dark:text-text-secondary-dark mb-12">
                     I'm currently available for freelance work and full-time opportunities. Feel free to reach out!
                 </p>
 
                 {contactInfo && (
                     <div className="flex flex-col sm:flex-row justify-center gap-6 mb-12">
-                        <a href={`tel:${contactInfo.phone.replace(/[^0-9+]/g, '')}`} className="flex items-center justify-center gap-3 text-gray-700 dark:text-white hover:text-primary transition-colors">
+                        <a href={`tel:${contactInfo.phone.replace(/[^0-9+]/g, '')}`} className="flex items-center justify-center gap-3 text-text-primary-light dark:text-text-primary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors">
                             <Phone size={20} /> {contactInfo.phone}
                         </a>
-                        <a href={`mailto:${contactInfo.email}`} className="flex items-center justify-center gap-3 text-gray-700 dark:text-white hover:text-primary transition-colors">
+                        <a href={`mailto:${contactInfo.email}`} className="flex items-center justify-center gap-3 text-text-primary-light dark:text-text-primary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors">
                             <Mail size={20} /> {contactInfo.email}
                         </a>
                     </div>
                 )}
 
-                <a 
-                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contactInfo?.email || 'vishnukrishnankutty54@gmail.com'}`} 
+                <a
+                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contactInfo?.email || 'vishnukrishnankutty54@gmail.com'}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-semibold shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-1 transition-all"
+                    className="inline-block px-8 py-3 rounded-full bg-primary-light dark:bg-primary-dark text-white dark:text-black font-semibold shadow-lg shadow-primary-light/30 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all"
                 >
                     Send Email via Gmail
                 </a>
@@ -53,12 +53,12 @@ const Contact = () => {
                 {socials.length > 0 && (
                     <div className="flex justify-center gap-6 mt-16">
                         {socials.map((social) => (
-                            <a 
-                                key={social._id} 
-                                href={social.url} 
-                                target="_blank" 
-                                rel="noreferrer" 
-                                className="text-gray-400 hover:text-primary transition-colors"
+                            <a
+                                key={social._id}
+                                href={social.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"
                                 title={social.platform}
                             >
                                 {getIcon(social.platform)}

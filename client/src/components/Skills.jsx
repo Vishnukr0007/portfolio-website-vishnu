@@ -34,9 +34,9 @@ const Skills = () => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-4xl font-bold font-heading mb-12 dark:text-white"
+                    className="text-4xl font-bold font-heading mb-12 text-text-primary-light dark:text-text-primary-dark"
                 >
-                    My <span className="text-primary">Skills</span>
+                    My <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-light to-primary-dark dark:from-primary-dark dark:to-primary-light">Skills</span>
                 </motion.h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
@@ -47,12 +47,12 @@ const Skills = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: idx * 0.1 }}
-                            className="bg-white dark:bg-card p-8 rounded-2xl border border-gray-100 dark:border-white/5 hover:border-primary dark:hover:border-primary transition-colors shadow-sm dark:shadow-none"
+                            className="bg-card-light dark:bg-card-dark p-8 rounded-2xl border border-gray-100 dark:border-primary-dark/20 hover:border-primary-light dark:hover:border-primary-dark transition-all shadow-sm dark:shadow-none"
                         >
-                            <h3 className="text-xl font-semibold mb-6 text-primary">{category}</h3>
+                            <h3 className="text-xl font-semibold mb-6 text-primary-light dark:text-primary-dark">{category}</h3>
                             <div className="flex flex-wrap gap-3">
                                 {skills.filter(s => s.category === category).map((skill, sIdx) => (
-                                    <span key={sIdx} className="px-4 py-2 bg-gray-50 dark:bg-white/5 rounded-full text-sm text-gray-600 dark:text-text-secondary">
+                                    <span key={sIdx} className="px-4 py-2 bg-gray-50 dark:bg-white/5 rounded-full text-sm text-text-secondary-light dark:text-text-secondary-dark">
                                         {skill.name}
                                     </span>
                                 ))}

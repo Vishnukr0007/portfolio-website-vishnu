@@ -8,17 +8,29 @@ export default {
   theme: {
     extend: {
       colors: {
-        dark: '#0a0a0b',
-        card: '#131315',
-        primary: {
-          DEFAULT: '#8b5cf6',
-          glow: 'rgba(139, 92, 246, 0.5)'
+        dark: '#121212',
+        card: {
+          dark: '#1E1E1E',
+          light: '#FFFFFF',
         },
-        secondary: '#06b6d4',
-        accent: '#f472b6',
+        primary: {
+          dark: '#FFBF00',
+          light: '#D97706',
+          glow: 'rgba(255, 191, 0, 0.4)'
+        },
+        bg: {
+          dark: '#121212',
+          light: '#F8FAFC'
+        },
         text: {
-            primary: '#ffffff',
-            secondary: '#a1a1aa'
+          primary: {
+            dark: '#F8FAFC',
+            light: '#1a1a1a'
+          },
+          secondary: {
+            dark: '#A0A0A0',
+            light: '#475569'
+          }
         }
       },
       fontFamily: {
