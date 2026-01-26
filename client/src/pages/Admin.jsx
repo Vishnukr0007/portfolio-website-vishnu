@@ -274,78 +274,79 @@ const Admin = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0b] text-gray-900 dark:text-white">
+    return (
+        <div className="min-h-screen bg-bg-light dark:bg-bg-dark text-text-primary-light dark:text-text-primary-dark transition-colors duration-300">
             <div className="flex flex-col md:flex-row min-h-[calc(100vh-80px)]">
                 {/* Desktop Sidebar */}
-                <aside className="hidden md:flex w-72 bg-white dark:bg-card border-r border-gray-100 dark:border-white/5 p-4 flex-col justify-between sticky top-20 h-[calc(100vh-80px)] overflow-y-auto">
-                    <nav className="flex flex-col gap-1">
-                        <div className="mb-4 px-2">
-                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Management</h2>
+                <aside className="hidden md:flex w-72 bg-card-light dark:bg-card-dark border-r border-gray-200 dark:border-primary-dark/10 p-6 flex-col justify-between sticky top-20 h-[calc(100vh-80px)] overflow-y-auto">
+                    <nav className="flex flex-col gap-8">
+                        <div>
+                            <h2 className="text-[10px] font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-[0.2em] mb-6 px-2">Management</h2>
 
-                            <div className="space-y-1">
-                                {/* Projects Group */}
-                                <div className="p-1 rounded-xl bg-gray-50 dark:bg-white/5 mb-2">
-                                    <button onClick={() => setActiveTab('projects')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all ${activeTab === 'projects' ? 'bg-primary text-white shadow-md' : 'hover:bg-gray-200 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300'}`}>
-                                        <div className="flex items-center gap-2"><Briefcase size={18} /> <span className="text-sm font-medium">Projects</span></div>
-                                        <span className="text-[10px] bg-black/10 dark:bg-white/10 px-1.5 py-0.5 rounded-md">{projects.length}</span>
+                            <div className="space-y-4">
+                                <div className="space-y-1">
+                                    <button
+                                        onClick={() => setActiveTab('projects')}
+                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 ${activeTab === 'projects' || activeTab === 'add-project' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20' : 'hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark'}`}
+                                    >
+                                        <div className="flex items-center gap-3"><Briefcase size={20} /> <span className="text-sm font-semibold">Projects</span></div>
+                                        <span className={`text-[10px] px-2 py-0.5 rounded-full ${activeTab === 'projects' || activeTab === 'add-project' ? 'bg-black/20 dark:bg-black/20' : 'bg-gray-100 dark:bg-white/10'}`}>{projects.length}</span>
                                     </button>
-                                    <button onClick={() => { setActiveTab('add-project'); setEditingProject(null); resetProject(); }} className={`w-full flex items-center gap-2 px-3 py-1.5 mt-1 rounded-lg text-xs transition-all ${activeTab === 'add-project' ? 'text-primary font-bold' : 'text-gray-400 hover:text-primary'}`}>
-                                        <Plus size={14} /> Add New Project
+
+                                    <button
+                                        onClick={() => setActiveTab('manage-skills')}
+                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 ${activeTab === 'manage-skills' || activeTab === 'add-skill' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20' : 'hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark'}`}
+                                    >
+                                        <div className="flex items-center gap-3"><Zap size={20} /> <span className="text-sm font-semibold">Skills</span></div>
+                                        <span className={`text-[10px] px-2 py-0.5 rounded-full ${activeTab === 'manage-skills' || activeTab === 'add-skill' ? 'bg-black/20 dark:bg-black/20' : 'bg-gray-100 dark:bg-white/10'}`}>{skills.length}</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => setActiveTab('manage-experience')}
+                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 ${activeTab === 'manage-experience' || activeTab === 'add-experience' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20' : 'hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark'}`}
+                                    >
+                                        <div className="flex items-center gap-3"><Award size={20} /> <span className="text-sm font-semibold">Experience</span></div>
+                                        <span className={`text-[10px] px-2 py-0.5 rounded-full ${activeTab === 'manage-experience' || activeTab === 'add-experience' ? 'bg-black/20 dark:bg-black/20' : 'bg-gray-100 dark:bg-white/10'}`}>{experience.length}</span>
                                     </button>
                                 </div>
 
-                                {/* Skills Group */}
-                                <div className="p-1 rounded-xl bg-gray-50 dark:bg-white/5 mb-2">
-                                    <button onClick={() => setActiveTab('manage-skills')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all ${activeTab === 'manage-skills' ? 'bg-primary text-white shadow-md' : 'hover:bg-gray-200 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300'}`}>
-                                        <div className="flex items-center gap-2"><Zap size={18} /> <span className="text-sm font-medium">Skills</span></div>
-                                        <span className="text-[10px] bg-black/10 dark:bg-white/10 px-1.5 py-0.5 rounded-md">{skills.length}</span>
+                                <div className="pt-4 border-t border-gray-100 dark:border-white/5 space-y-1">
+                                    <button
+                                        onClick={() => setActiveTab('manage-socials')}
+                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 ${activeTab === 'manage-socials' || activeTab === 'add-social' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20' : 'hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark'}`}
+                                    >
+                                        <div className="flex items-center gap-3"><Share2 size={20} /> <span className="text-sm font-semibold">Socials</span></div>
                                     </button>
-                                    <button onClick={() => { setActiveTab('add-skill'); setEditingSkill(null); resetSkill(); }} className={`w-full flex items-center gap-2 px-3 py-1.5 mt-1 rounded-lg text-xs transition-all ${activeTab === 'add-skill' ? 'text-primary font-bold' : 'text-gray-400 hover:text-primary'}`}>
-                                        <Plus size={14} /> Add New Skill
+
+                                    <button
+                                        onClick={() => setActiveTab('contact-settings')}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${activeTab === 'contact-settings' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20' : 'hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark'}`}
+                                    >
+                                        <Settings size={20} /> <span className="text-sm font-semibold">Settings</span>
                                     </button>
                                 </div>
-
-                                {/* Experience Group */}
-                                <div className="p-1 rounded-xl bg-gray-50 dark:bg-white/5 mb-2">
-                                    <button onClick={() => setActiveTab('manage-experience')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all ${activeTab === 'manage-experience' ? 'bg-primary text-white shadow-md' : 'hover:bg-gray-200 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300'}`}>
-                                        <div className="flex items-center gap-2"><Award size={18} /> <span className="text-sm font-medium">Experience</span></div>
-                                        <span className="text-[10px] bg-black/10 dark:bg-white/10 px-1.5 py-0.5 rounded-md">{experience.length}</span>
-                                    </button>
-                                    <button onClick={() => { setActiveTab('add-experience'); setEditingExp(null); resetExp(); }} className={`w-full flex items-center gap-2 px-3 py-1.5 mt-1 rounded-lg text-xs transition-all ${activeTab === 'add-experience' ? 'text-primary font-bold' : 'text-gray-400 hover:text-primary'}`}>
-                                        <Plus size={14} /> Add New Exp
-                                    </button>
-                                </div>
-
-                                {/* Socials Group */}
-                                <div className="p-1 rounded-xl bg-gray-50 dark:bg-white/5 mb-2">
-                                    <button onClick={() => setActiveTab('manage-socials')} className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all ${activeTab === 'manage-socials' ? 'bg-primary text-white shadow-md' : 'hover:bg-gray-200 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300'}`}>
-                                        <div className="flex items-center gap-2"><Share2 size={18} /> <span className="text-sm font-medium">Socials</span></div>
-                                        <span className="text-[10px] bg-black/10 dark:bg-white/10 px-1.5 py-0.5 rounded-md">{socials.length}</span>
-                                    </button>
-                                    <button onClick={() => { setActiveTab('add-social'); setEditingSocial(null); resetSocial(); }} className={`w-full flex items-center gap-2 px-3 py-1.5 mt-1 rounded-lg text-xs transition-all ${activeTab === 'add-social' ? 'text-primary font-bold' : 'text-gray-400 hover:text-primary'}`}>
-                                        <Plus size={14} /> Add New Social
-                                    </button>
-                                </div>
-
-                                <button onClick={() => setActiveTab('contact-settings')} className={`w-full flex items-center gap-2 px-4 py-3 rounded-xl transition-all ${activeTab === 'contact-settings' ? 'bg-primary text-white shadow-lg' : 'hover:bg-gray-100 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300'}`}>
-                                    <Settings size={20} /> <span className="font-semibold">Settings</span>
-                                </button>
                             </div>
                         </div>
                     </nav>
-                    <div className="px-2">
-                        <button onClick={() => dispatch(logout())} className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all font-semibold"><LogOut size={20} /> Logout</button>
+
+                    <div className="pt-6 border-t border-gray-100 dark:border-white/5">
+                        <button
+                            onClick={() => dispatch(logout())}
+                            className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all duration-300 font-bold text-sm"
+                        >
+                            <LogOut size={20} /> Logout
+                        </button>
                     </div>
                 </aside>
 
                 {/* Mobile Bottom Navigation */}
-                <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-white/90 dark:bg-card/90 backdrop-blur-xl border border-gray-100 dark:border-white/10 rounded-2xl px-3 py-1.5 flex items-center gap-1 shadow-2xl z-50">
-                    <button onClick={() => setActiveTab('projects')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'projects' || activeTab === 'add-project' ? 'bg-primary text-white' : 'text-gray-400'}`}><Briefcase size={20} /></button>
-                    <button onClick={() => setActiveTab('manage-skills')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-skills' || activeTab === 'add-skill' ? 'bg-primary text-white' : 'text-gray-400'}`}><Zap size={20} /></button>
-                    <button onClick={() => setActiveTab('manage-experience')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-experience' || activeTab === 'add-experience' ? 'bg-primary text-white' : 'text-gray-400'}`}><Award size={20} /></button>
-                    <button onClick={() => setActiveTab('manage-socials')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-socials' || activeTab === 'add-social' ? 'bg-primary text-white' : 'text-gray-400'}`}><Share2 size={20} /></button>
-                    <button onClick={() => setActiveTab('contact-settings')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'contact-settings' ? 'bg-primary text-white' : 'text-gray-400'}`}><Settings size={20} /></button>
-                    <div className="w-[1px] h-5 bg-gray-200 dark:bg-white/10 mx-0.5"></div>
+                <nav className="md:hidden fixed bottom-6 left-6 right-6 bg-card-light/90 dark:bg-card-dark/90 backdrop-blur-xl border border-gray-200 dark:border-primary-dark/10 rounded-2xl px-4 py-2 flex items-center justify-between shadow-2xl z-50">
+                    <button onClick={() => setActiveTab('projects')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'projects' || activeTab === 'add-project' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Briefcase size={20} /></button>
+                    <button onClick={() => setActiveTab('manage-skills')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-skills' || activeTab === 'add-skill' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Zap size={20} /></button>
+                    <button onClick={() => setActiveTab('manage-experience')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-experience' || activeTab === 'add-experience' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Award size={20} /></button>
+                    <button onClick={() => setActiveTab('manage-socials')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-socials' || activeTab === 'add-social' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Share2 size={20} /></button>
+                    <button onClick={() => setActiveTab('contact-settings')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'contact-settings' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Settings size={20} /></button>
+                    <div className="w-[1px] h-6 bg-gray-200 dark:bg-white/10 mx-1"></div>
                     <button onClick={() => dispatch(logout())} className="p-2.5 text-red-500"><LogOut size={20} /></button>
                 </nav>
 
@@ -368,37 +369,75 @@ const Admin = () => {
                         </div>
 
                         {activeTab === 'projects' && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                 {projects.map(p => (
-                                    <div key={p._id} className="bg-white dark:bg-card p-6 rounded-2xl border border-gray-100 dark:border-white/5 flex gap-4 group">
-                                        <img src={p.image} className="w-16 h-16 rounded object-cover" alt="" />
+                                    <div key={p._id} className="bg-card-light dark:bg-card-dark p-6 rounded-2xl border border-gray-200 dark:border-primary-dark/10 flex gap-6 hover:border-primary-light dark:hover:border-primary-dark/40 transition-all duration-300 shadow-sm">
+                                        <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-100 dark:bg-black/20 flex-shrink-0">
+                                            <img src={p.image} className="w-full h-full object-cover" alt="" />
+                                        </div>
                                         <div className="flex-1 min-w-0">
-                                            <div className="flex justify-between">
-                                                <h3 className="font-bold truncate">{p.title}</h3>
+                                            <div className="flex justify-between items-start mb-2">
+                                                <h3 className="font-bold text-lg truncate dark:group-hover:text-primary-dark transition-colors">{p.title}</h3>
                                                 <div className="flex gap-2">
-                                                    <button onClick={() => handleEditProject(p)} className="text-gray-400 hover:text-primary"><Edit size={16} /></button>
-                                                    <button onClick={() => handleDeleteProject(p._id)} className="text-gray-400 hover:text-red-500"><Trash2 size={16} /></button>
+                                                    <button onClick={() => handleEditProject(p)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"><Edit size={16} /></button>
+                                                    <button onClick={() => handleDeleteProject(p._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
                                                 </div>
                                             </div>
-                                            <p className="text-xs text-gray-500 line-clamp-2">{p.description}</p>
+                                            <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark line-clamp-2 leading-relaxed mb-4">{p.description}</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {p.tags?.slice(0, 3).map((tag, i) => (
+                                                    <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark">{tag}</span>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
-                                {projects.length === 0 && <p className="text-center py-10 text-gray-500 col-span-full">No projects found.</p>}
+                                {projects.length === 0 && <p className="text-center py-20 text-text-secondary-light dark:text-text-secondary-dark col-span-full font-medium">No projects found.</p>}
                             </div>
                         )}
 
                         {activeTab === 'add-project' && (
-                            <div className="w-full bg-white dark:bg-card p-6 md:p-10 rounded-2xl md:rounded-3xl border border-gray-100 dark:border-white/5 shadow-xl">
-                                <h2 className="text-2xl md:text-3xl font-bold font-heading mb-6 md:mb-8">{editingProject ? 'Edit' : 'Add'} <span className="text-primary">Project</span></h2>
-                                <form onSubmit={handleProjectSubmit(onProjectSubmit)} className="space-y-4">
-                                    <input {...registerProject('title')} placeholder="Title" className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" required />
-                                    <input {...registerProject('category')} placeholder="Category" className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" />
-                                    <textarea {...registerProject('description')} placeholder="Description" rows={3} className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" required />
-                                    <input type="file" {...registerProject('image')} className="w-full text-xs" />
-                                    <input {...registerProject('tags')} placeholder="Tags (comma separated)" className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" />
-                                    <div className="flex flex-col sm:flex-row gap-4"><input {...registerProject('links.demo')} placeholder="Demo URL" className="flex-1 p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" /><input {...registerProject('links.code')} placeholder="Code URL" className="flex-1 p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" /></div>
-                                    <button type="submit" className="w-full py-4 bg-primary text-white rounded-2xl font-bold">{editingProject ? 'Update' : 'Create'}</button>
+                            <div className="max-w-4xl mx-auto bg-card-light dark:bg-card-dark p-8 md:p-12 rounded-3xl border border-gray-200 dark:border-primary-dark/10 shadow-2xl">
+                                <h2 className="text-2xl md:text-3xl font-bold font-heading mb-8">{editingProject ? 'Edit' : 'Add'} <span className="text-primary-light dark:text-primary-dark">Project</span></h2>
+                                <form onSubmit={handleProjectSubmit(onProjectSubmit)} className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Project Title</label>
+                                            <input {...registerProject('title')} placeholder="Enter title" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Category</label>
+                                            <input {...registerProject('category')} placeholder="e.g. Web App" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Description</label>
+                                        <textarea {...registerProject('description')} placeholder="Detail your project..." rows={4} className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none resize-none" required />
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Tags</label>
+                                            <input {...registerProject('tags')} placeholder="React, Node.js (comma separated)" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Project Image</label>
+                                            <label className="flex items-center justify-center p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-dashed border-gray-300 dark:border-white/10 hover:border-primary-light dark:hover:border-primary-dark transition-all cursor-pointer">
+                                                <input type="file" {...registerProject('image')} className="hidden" />
+                                                <span className="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark italic">Click to upload image</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Demo link</label>
+                                            <input {...registerProject('links.demo')} placeholder="https://..." className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Code link</label>
+                                            <input {...registerProject('links.code')} placeholder="https://github.com/..." className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" />
+                                        </div>
+                                    </div>
+                                    <button type="submit" className="w-full py-5 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all">{editingProject ? 'Update Project' : 'Publish Project'}</button>
                                 </form>
                             </div>
                         )}
@@ -406,11 +445,14 @@ const Admin = () => {
                         {activeTab === 'manage-skills' && (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {skills.map(s => (
-                                    <div key={s._id} className="bg-white dark:bg-card p-4 rounded-xl border border-gray-100 dark:border-white/5 flex justify-between items-center">
-                                        <div><div className="font-bold">{s.name}</div><div className="text-[10px] text-primary uppercase">{s.category}</div></div>
+                                    <div key={s._id} className="bg-card-light dark:bg-card-dark p-6 rounded-2xl border border-gray-200 dark:border-primary-dark/10 flex justify-between items-center group hover:border-primary-light dark:hover:border-primary-dark/40 transition-all duration-300">
+                                        <div>
+                                            <div className="font-bold text-lg">{s.name}</div>
+                                            <div className="text-[10px] font-bold text-primary-light dark:text-primary-dark uppercase tracking-wider mt-1">{s.category}</div>
+                                        </div>
                                         <div className="flex gap-2">
-                                            <button onClick={() => handleEditSkill(s)} className="text-gray-400 hover:text-primary"><Edit size={14} /></button>
-                                            <button onClick={() => handleDeleteSkill(s._id)} className="text-gray-400 hover:text-red-500"><Trash2 size={14} /></button>
+                                            <button onClick={() => handleEditSkill(s)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"><Edit size={16} /></button>
+                                            <button onClick={() => handleDeleteSkill(s._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
                                         </div>
                                     </div>
                                 ))}
@@ -418,14 +460,20 @@ const Admin = () => {
                         )}
 
                         {activeTab === 'add-skill' && (
-                            <div className="max-w-md w-full mx-auto bg-white dark:bg-card p-6 md:p-10 rounded-2xl md:rounded-3xl border border-gray-100 dark:border-white/5 shadow-xl">
-                                <h2 className="text-2xl md:text-3xl font-bold font-heading mb-6 md:mb-8">{editingSkill ? 'Edit' : 'Add'} <span className="text-primary">Skill</span></h2>
-                                <form onSubmit={handleSkillSubmit(onSkillSubmit)} className="space-y-4">
-                                    <input {...registerSkill('name')} placeholder="Skill Name" className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" required />
-                                    <select {...registerSkill('category')} className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5">
-                                        <option value="Frontend">Frontend</option><option value="Backend">Backend</option><option value="Database & API">Database & API</option><option value="Tools">Tools</option>
-                                    </select>
-                                    <button type="submit" className="w-full py-4 bg-primary text-white rounded-2xl font-bold">Save Skill</button>
+                            <div className="max-w-xl mx-auto bg-card-light dark:bg-card-dark p-8 md:p-12 rounded-3xl border border-gray-200 dark:border-primary-dark/10 shadow-2xl">
+                                <h2 className="text-2xl md:text-3xl font-bold font-heading mb-8">{editingSkill ? 'Edit' : 'Add'} <span className="text-primary-light dark:text-primary-dark">Skill</span></h2>
+                                <form onSubmit={handleSkillSubmit(onSkillSubmit)} className="space-y-6">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Skill Name</label>
+                                        <input {...registerSkill('name')} placeholder="e.g. React" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Category</label>
+                                        <select {...registerSkill('category')} className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none">
+                                            <option value="Frontend">Frontend</option><option value="Backend">Backend</option><option value="Database & API">Database & API</option><option value="Tools">Tools</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" className="w-full py-5 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all">Save Skill</button>
                                 </form>
                             </div>
                         )}
@@ -433,11 +481,14 @@ const Admin = () => {
                         {activeTab === 'manage-experience' && (
                             <div className="space-y-4">
                                 {experience.map(e => (
-                                    <div key={e._id} className="bg-white dark:bg-card p-6 rounded-2xl border border-gray-100 dark:border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center group gap-4">
-                                        <div><h3 className="font-bold">{e.title}</h3><p className="text-sm text-gray-500">{e.subtitle} • {e.date}</p></div>
-                                        <div className="flex gap-3">
-                                            <button onClick={() => handleEditExp(e)} className="p-2 text-gray-400 hover:text-primary transition-colors"><Edit size={18} /></button>
-                                            <button onClick={() => handleDeleteExp(e._id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors"><Trash2 size={18} /></button>
+                                    <div key={e._id} className="bg-card-light dark:bg-card-dark p-6 rounded-2xl border border-gray-200 dark:border-primary-dark/10 flex flex-col sm:flex-row justify-between items-start sm:items-center group gap-4 hover:border-primary-light dark:hover:border-primary-dark/40 transition-all duration-300">
+                                        <div>
+                                            <h3 className="font-bold text-lg">{e.title}</h3>
+                                            <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">{e.subtitle} <span className="mx-2 opacity-30">•</span> {e.date}</p>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button onClick={() => handleEditExp(e)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"><Edit size={20} /></button>
+                                            <button onClick={() => handleDeleteExp(e._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors"><Trash2 size={20} /></button>
                                         </div>
                                     </div>
                                 ))}
@@ -445,15 +496,34 @@ const Admin = () => {
                         )}
 
                         {activeTab === 'add-experience' && (
-                            <div className="max-w-2xl w-full mx-auto bg-white dark:bg-card p-6 md:p-10 rounded-2xl md:rounded-3xl border border-gray-100 dark:border-white/5 shadow-xl">
-                                <h2 className="text-2xl md:text-3xl font-bold font-heading mb-6 md:mb-8">{editingExp ? 'Edit' : 'Add'} <span className="text-primary">Experience</span></h2>
-                                <form onSubmit={handleExpSubmit(onExpSubmit)} className="space-y-4">
-                                    <select {...registerExp('type')} className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5"><option value="Experience">Experience</option><option value="Education">Education</option></select>
-                                    <input {...registerExp('title')} placeholder="Title" className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" required />
-                                    <input {...registerExp('subtitle')} placeholder="Company/School" className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" required />
-                                    <input {...registerExp('date')} placeholder="Date" className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" required />
-                                    <textarea {...registerExp('description')} placeholder="Description (lines)" rows={4} className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" />
-                                    <button type="submit" className="w-full py-4 bg-primary text-white rounded-2xl font-bold">Save Experience</button>
+                            <div className="max-w-2xl mx-auto bg-card-light dark:bg-card-dark p-8 md:p-12 rounded-3xl border border-gray-200 dark:border-primary-dark/10 shadow-2xl">
+                                <h2 className="text-2xl md:text-3xl font-bold font-heading mb-8">{editingExp ? 'Edit' : 'Add'} <span className="text-primary-light dark:text-primary-dark">Experience</span></h2>
+                                <form onSubmit={handleExpSubmit(onExpSubmit)} className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Type</label>
+                                            <select {...registerExp('type')} className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none">
+                                                <option value="Experience">Experience</option><option value="Education">Education</option>
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Date range</label>
+                                            <input {...registerExp('date')} placeholder="e.g. 2022 - 2024" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Title</label>
+                                        <input {...registerExp('title')} placeholder="Role or Degree" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Organization</label>
+                                        <input {...registerExp('subtitle')} placeholder="Company or School name" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Description (Bullets)</label>
+                                        <textarea {...registerExp('description')} placeholder="Achievements (one per line)" rows={4} className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none resize-none" />
+                                    </div>
+                                    <button type="submit" className="w-full py-5 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all">Save Entry</button>
                                 </form>
                             </div>
                         )}
@@ -461,78 +531,87 @@ const Admin = () => {
                         {activeTab === 'manage-socials' && (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {socials.map(s => (
-                                    <div key={s._id} className="bg-white dark:bg-card p-6 rounded-2xl border border-gray-100 dark:border-white/5 flex justify-between items-center group">
-                                        <div><h3 className="font-bold">{s.platform}</h3><p className="text-xs text-gray-500 truncate max-w-[200px]">{s.url}</p></div>
-                                        <div className="flex gap-3">
-                                            <button onClick={() => handleEditSocial(s)} className="p-2 text-gray-400 hover:text-primary transition-colors"><Edit size={18} /></button>
-                                            <button onClick={() => handleDeleteSocial(s._id)} className="p-2 text-gray-400 hover:text-red-500 transition-colors"><Trash2 size={18} /></button>
+                                    <div key={s._id} className="bg-card-light dark:bg-card-dark p-6 rounded-2xl border border-gray-200 dark:border-primary-dark/10 flex justify-between items-center group hover:border-primary-light dark:hover:border-primary-dark/40 transition-all duration-300">
+                                        <div className="min-w-0 flex-1">
+                                            <h3 className="font-bold text-lg leading-tight">{s.platform}</h3>
+                                            <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark truncate mt-1">{s.url}</p>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button onClick={() => handleEditSocial(s)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"><Edit size={20} /></button>
+                                            <button onClick={() => handleDeleteSocial(s._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors"><Trash2 size={20} /></button>
                                         </div>
                                     </div>
                                 ))}
-                                {socials.length === 0 && <p className="text-center py-10 text-gray-500 col-span-full">No social links added yet.</p>}
+                                {socials.length === 0 && <p className="text-center py-20 text-text-secondary-light dark:text-text-secondary-dark col-span-full font-medium">No social links added yet.</p>}
                             </div>
                         )}
 
                         {activeTab === 'add-social' && (
-                            <div className="max-w-md w-full mx-auto bg-white dark:bg-card p-6 md:p-10 rounded-2xl md:rounded-3xl border border-gray-100 dark:border-white/5 shadow-xl">
-                                <h2 className="text-2xl md:text-3xl font-bold font-heading mb-6 md:mb-8">{editingSocial ? 'Edit' : 'Add'} <span className="text-primary">Social</span></h2>
-                                <form onSubmit={handleSocialSubmit(onSocialSubmit)} className="space-y-4">
-                                    <input {...registerSocial('platform')} placeholder="Platform (e.g. GitHub)" className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" required />
-                                    <input {...registerSocial('url')} placeholder="Profile URL" className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" required />
-                                    <button type="submit" className="w-full py-4 bg-primary text-white rounded-2xl font-bold">Save Link</button>
+                            <div className="max-w-xl mx-auto bg-card-light dark:bg-card-dark p-8 md:p-12 rounded-3xl border border-gray-200 dark:border-primary-dark/10 shadow-2xl">
+                                <h2 className="text-2xl md:text-3xl font-bold font-heading mb-8">{editingSocial ? 'Edit' : 'Add'} <span className="text-primary-light dark:text-primary-dark">Social</span></h2>
+                                <form onSubmit={handleSocialSubmit(onSocialSubmit)} className="space-y-6">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Platform Name</label>
+                                        <input {...registerSocial('platform')} placeholder="e.g. GitHub, LinkedIn" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Profile link</label>
+                                        <input {...registerSocial('url')} placeholder="https://..." className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
+                                    </div>
+                                    <button type="submit" className="w-full py-5 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all">Save Social</button>
                                 </form>
                             </div>
                         )}
 
                         {activeTab === 'contact-settings' && (
-                            <div className="max-w-2xl w-full mx-auto bg-white dark:bg-card p-6 md:p-10 rounded-2xl md:rounded-3xl border border-gray-100 dark:border-white/5 shadow-xl">
-                                <h2 className="text-2xl md:text-3xl font-bold font-heading mb-6 md:mb-8">Contact <span className="text-primary">Settings</span></h2>
-                                <p className="text-sm text-gray-500 mb-6">These details are displayed in your Contact section and the mobile menu footer.</p>
-                                <form onSubmit={handleContactSubmit(onContactSubmit)} className="space-y-6">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="max-w-3xl mx-auto bg-card-light dark:bg-card-dark p-8 md:p-12 rounded-3xl border border-gray-200 dark:border-primary-dark/10 shadow-2xl">
+                                <h2 className="text-2xl md:text-3xl font-bold font-heading mb-8">Contact <span className="text-primary-light dark:text-primary-dark">Settings</span></h2>
+                                <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-10 font-medium">These details are displayed in your Contact section and the mobile menu footer.</p>
+                                <form onSubmit={handleContactSubmit(onContactSubmit)} className="space-y-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-2">
-                                            <label className="text-xs font-bold uppercase tracking-wider text-gray-400">Primary Email</label>
-                                            <input {...registerContact('email')} placeholder="Email Address" className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" required />
+                                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary-light dark:text-text-secondary-dark px-1">Primary Email</label>
+                                            <input {...registerContact('email')} placeholder="Email Address" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-xs font-bold uppercase tracking-wider text-gray-400">Primary Phone</label>
-                                            <input {...registerContact('phone')} placeholder="Phone Number" className="w-full p-3 bg-gray-50 dark:bg-black/10 rounded-xl border border-gray-100 dark:border-white/5" required />
+                                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary-light dark:text-text-secondary-dark px-1">Primary Phone</label>
+                                            <input {...registerContact('phone')} placeholder="Phone Number" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
                                         </div>
                                     </div>
 
-                                    <div className="p-6 bg-primary/5 rounded-2xl border border-primary/20 space-y-4">
+                                    <div className="p-8 bg-primary-light/5 dark:bg-primary-dark/5 rounded-3xl border border-primary-light/20 dark:border-primary-dark/20 space-y-6">
                                         <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <div className="p-2 bg-primary/10 rounded-lg text-primary"><FileText size={24} /></div>
+                                            <div className="flex items-center gap-4">
+                                                <div className="p-3 bg-primary-light/10 dark:bg-primary-dark/10 rounded-2xl text-primary-light dark:text-primary-dark"><FileText size={28} /></div>
                                                 <div>
-                                                    <h3 className="font-bold">Resume Management</h3>
-                                                    <p className="text-xs text-gray-500">Track and update your public resume</p>
+                                                    <h3 className="font-bold text-lg">Resume Management</h3>
+                                                    <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark font-medium mt-0.5">Track and update your public resume</p>
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <div className="text-2xl font-bold text-primary flex items-center justify-end gap-2">
-                                                    <Download size={20} /> {contactInfo?.resumeDownloadCount || 0}
+                                                <div className="text-2xl font-bold text-primary-light dark:text-primary-dark flex items-center justify-end gap-2">
+                                                    <Download size={22} className="opacity-50" /> {contactInfo?.resumeDownloadCount || 0}
                                                 </div>
-                                                <p className="text-[10px] text-gray-400 uppercase font-bold">Total Downloads</p>
+                                                <p className="text-[10px] text-text-secondary-light dark:text-text-secondary-dark uppercase font-bold tracking-widest mt-1">Total Downloads</p>
                                             </div>
                                         </div>
 
                                         <div className="space-y-2">
-                                            <label className="text-xs font-bold uppercase tracking-wider text-gray-400">Resume Link (URL)</label>
+                                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary-light dark:text-text-secondary-dark px-1">Resume Link (URL)</label>
                                             <input
                                                 type="text"
                                                 {...registerContact('resumeUrl')}
-                                                placeholder="Direct link to your PDF resume (e.g. Cloudinary/Drive URL)"
-                                                className="w-full p-3 bg-white dark:bg-black/20 rounded-xl border border-gray-100 dark:border-white/10"
+                                                placeholder="Direct link to your PDF (e.g. Cloudinary, Drive URL)"
+                                                className="w-full p-4 bg-white dark:bg-black/40 rounded-xl border border-gray-100 dark:border-white/10 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none"
                                             />
                                         </div>
 
-                                        <div className="text-[10px] text-gray-400 italic">
+                                        <div className="text-[11px] text-text-secondary-light dark:text-text-secondary-dark italic bg-white/50 dark:bg-white/5 p-3 rounded-lg border border-gray-100 dark:border-white/5 font-medium leading-relaxed">
                                             Tip: You can upload your PDF to the Projects section and copy the URL here.
                                         </div>
                                     </div>
 
-                                    <button type="submit" className="w-full py-4 bg-primary text-white rounded-2xl font-bold mt-4 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all">Update Information</button>
+                                    <button type="submit" className="w-full py-5 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all">Update Information</button>
                                 </form>
                             </div>
                         )}
