@@ -274,7 +274,6 @@ const Admin = () => {
     };
 
     return (
-    return (
         <div className="min-h-screen bg-bg-light dark:bg-bg-dark text-text-primary-light dark:text-text-primary-dark transition-colors duration-300">
             <div className="flex flex-col md:flex-row min-h-[calc(100vh-80px)]">
                 {/* Desktop Sidebar */}
