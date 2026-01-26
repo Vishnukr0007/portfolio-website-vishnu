@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useSelector } from 'react-redux';
 
 const Hero = () => {
+    const { contactInfo } = useSelector((state) => state.portfolio);
     return (
         <section id="home" className="min-h-screen flex items-center pt-16 relative overflow-hidden">
             {/* Background Glow */}
@@ -16,9 +18,9 @@ const Hero = () => {
                             transition={{ duration: 0.5 }}
                             className="text-4xl sm:text-5xl md:text-7xl font-bold font-heading mb-6 leading-tight dark:text-white"
                         >
-                            Welcome to my <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-light to-primary-dark dark:from-primary-dark dark:to-primary-light">Portfolio</span>
+                            {contactInfo?.heroTitle?.split(' ')[0]} to my <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-light to-primary-dark dark:from-primary-dark dark:to-primary-light">{contactInfo?.heroTitle?.split(' ').slice(1).join(' ') || 'Portfolio'}</span>
                             <div className="text-2xl sm:text-3xl md:text-3xl mt-4 font-medium text-gray-500 dark:text-text-secondary-dark">
-                                MERN Stack & Full-Stack Engineer
+                                {contactInfo?.heroSubtitle || 'MERN Stack & Full-Stack Engineer'}
                             </div>
                         </motion.h1>
 
@@ -28,7 +30,7 @@ const Hero = () => {
                             transition={{ duration: 0.5, delay: 0.2 }}
                             className="text-lg md:text-xl text-text-secondary-light dark:text-text-secondary-dark mb-8 leading-relaxed"
                         >
-                            Hi, I’m Vishnu K — specializing in building scalable, responsive, and secure web applications using React, Node.js, Express, and MongoDB. I focus on writing clean, efficient code and delivering high-quality products.
+                            {contactInfo?.heroDescription || 'Hi, I’m Vishnu K — specializing in building scalable, responsive, and secure web applications using React, Node.js, Express, and MongoDB. I focus on writing clean, efficient code and delivering high-quality products.'}
                         </motion.p>
 
                         <motion.div
@@ -66,9 +68,13 @@ const Hero = () => {
                         <div className="relative w-64 h-64 md:w-80 md:h-80">
                             <div className="absolute inset-0 bg-gradient-to-tr from-primary-light to-primary-dark rounded-3xl rotate-6 opacity-20 blur-2xl"></div>
                             <div className="relative w-full h-full rounded-2xl overflow-hidden border-2 border-primary-light/20 dark:border-primary-dark/20 bg-card-light dark:bg-card-dark shadow-2xl">
-                                <div className="w-full h-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
-                                    <span className="text-gray-400 dark:text-gray-500 font-medium">Professional Headshot</span>
-                                </div>
+                                {contactInfo?.heroImage ? (
+                                    <img src={contactInfo.heroImage} alt="Professional Headshot" className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="w-full h-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+                                        <span className="text-gray-400 dark:text-gray-500 font-medium whitespace-nowrap px-4 text-center">Professional Headshot</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </motion.div>

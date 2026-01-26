@@ -41,6 +41,10 @@ const Admin = () => {
             setContactValue('email', contactInfo.email);
             setContactValue('phone', contactInfo.phone);
             setContactValue('resumeUrl', contactInfo.resumeUrl || '');
+            setContactValue('heroTitle', contactInfo.heroTitle || '');
+            setContactValue('heroSubtitle', contactInfo.heroSubtitle || '');
+            setContactValue('heroDescription', contactInfo.heroDescription || '');
+            setContactValue('heroImage', contactInfo.heroImage || '');
         }
     }, [contactInfo, setContactValue]);
 
@@ -264,13 +268,31 @@ const Admin = () => {
         setActiveTab('add-social');
     };
 
-    // Contact Info Logic
+    // Contact & Hero Info Logic
     const onContactSubmit = async (data) => {
+        const toastId = toast.loading('Updating settings...');
         try {
-            await api.put(`/contact-info`, data);
-            toast.success('Contact information updated!');
+            let heroImageUrl = contactInfo?.heroImage || '';
+
+            // Handle Hero Image Upload if present
+            if (data.heroImageFile && data.heroImageFile[0]) {
+                const formData = new FormData();
+                formData.append('image', data.heroImageFile[0]);
+                const uploadRes = await api.post('/upload', formData);
+                heroImageUrl = uploadRes.data.url;
+            }
+
+            const finalData = {
+                ...data,
+                heroImage: heroImageUrl
+            };
+
+            await api.put(`/contact-info`, finalData);
+            toast.success('Settings updated successfully!', { id: toastId });
             dispatch(fetchContactInfo());
-        } catch (error) { toast.error('Unauthorized or Failed'); }
+        } catch (error) {
+            toast.error('Failed to update settings', { id: toastId });
+        }
     };
 
     return (
@@ -321,7 +343,14 @@ const Admin = () => {
                                         onClick={() => setActiveTab('contact-settings')}
                                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${activeTab === 'contact-settings' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20' : 'hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark'}`}
                                     >
-                                        <Settings size={20} /> <span className="text-sm font-semibold">Settings</span>
+                                        <Settings size={20} /> <span className="text-sm font-semibold">Contact Settings</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => setActiveTab('hero-settings')}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${activeTab === 'hero-settings' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20' : 'hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark'}`}
+                                    >
+                                        <FileText size={20} /> <span className="text-sm font-semibold">Hero Settings</span>
                                     </button>
                                 </div>
                             </div>
@@ -345,6 +374,7 @@ const Admin = () => {
                     <button onClick={() => setActiveTab('manage-experience')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-experience' || activeTab === 'add-experience' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Award size={20} /></button>
                     <button onClick={() => setActiveTab('manage-socials')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-socials' || activeTab === 'add-social' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Share2 size={20} /></button>
                     <button onClick={() => setActiveTab('contact-settings')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'contact-settings' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Settings size={20} /></button>
+                    <button onClick={() => setActiveTab('hero-settings')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'hero-settings' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><FileText size={20} /></button>
                     <div className="w-[1px] h-6 bg-gray-200 dark:bg-white/10 mx-1"></div>
                     <button onClick={() => dispatch(logout())} className="p-2.5 text-red-500"><LogOut size={20} /></button>
                 </nav>
@@ -655,6 +685,52 @@ const Admin = () => {
                                     </div>
 
                                     <button type="submit" className="w-full py-5 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all">Update Information</button>
+                                </form>
+                            </div>
+                        )}
+                        {activeTab === 'hero-settings' && (
+                            <div className="max-w-4xl mx-auto bg-card-light dark:bg-card-dark p-8 md:p-12 rounded-3xl border border-gray-200 dark:border-primary-dark/10 shadow-2xl">
+                                <h2 className="text-2xl md:text-3xl font-bold font-heading mb-8">Hero <span className="text-primary-light dark:text-primary-dark">Settings</span></h2>
+                                <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-10 font-medium">Customize the main landing section of your portfolio.</p>
+
+                                <form onSubmit={handleContactSubmit(onContactSubmit)} className="space-y-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div className="space-y-6">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary-light dark:text-text-secondary-dark px-1">Hero Title</label>
+                                                <input {...registerContact('heroTitle')} placeholder="e.g. Welcome to my Portfolio" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary-light dark:text-text-secondary-dark px-1">Hero Subtitle</label>
+                                                <input {...registerContact('heroSubtitle')} placeholder="e.g. Full-Stack Engineer" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary-light dark:text-text-secondary-dark px-1">Professional Headshot</label>
+                                            <div className="flex flex-col gap-4">
+                                                {contactInfo?.heroImage && (
+                                                    <div className="w-32 h-32 rounded-2xl overflow-hidden border-2 border-primary-light/20 dark:border-primary-dark/20 bg-black/5">
+                                                        <img src={contactInfo.heroImage} alt="Headshot Preview" className="w-full h-full object-cover" />
+                                                    </div>
+                                                )}
+                                                <label className="flex items-center justify-center p-8 bg-gray-50 dark:bg-black/20 rounded-2xl border-2 border-dashed border-gray-200 dark:border-white/10 hover:border-primary-light dark:hover:border-primary-dark transition-all cursor-pointer group">
+                                                    <input type="file" {...registerContact('heroImageFile')} className="hidden" />
+                                                    <div className="text-center">
+                                                        <Plus className="mx-auto mb-2 text-text-secondary-light dark:text-text-secondary-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors" size={24} />
+                                                        <span className="text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">Change Headshot</span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary-light dark:text-text-secondary-dark px-1">Hero Description</label>
+                                        <textarea {...registerContact('heroDescription')} rows={5} placeholder="Write a short intro about yourself..." className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none resize-none" required />
+                                    </div>
+
+                                    <button type="submit" className="w-full py-5 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all">Update Hero Content</button>
                                 </form>
                             </div>
                         )}

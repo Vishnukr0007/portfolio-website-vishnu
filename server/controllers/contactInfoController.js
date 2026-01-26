@@ -7,7 +7,11 @@ exports.getContactInfo = async (req, res) => {
             // Provide defaults if none exist
             info = await ContactInfo.create({
                 email: 'vishnukrishnankutty54@gmail.com',
-                phone: '+91 6282899456'
+                phone: '+91 6282899456',
+                heroTitle: 'Welcome to my Portfolio',
+                heroSubtitle: 'MERN Stack & Full-Stack Engineer',
+                heroDescription: 'Hi, I’m Vishnu K — specializing in building scalable, responsive, and secure web applications...',
+                heroImage: ''
             });
         }
         res.json(info);
