@@ -368,30 +368,41 @@ const Admin = () => {
                         </div>
 
                         {activeTab === 'projects' && (
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                {projects.map(p => (
-                                    <div key={p._id} className="bg-card-light dark:bg-card-dark p-6 rounded-2xl border border-gray-200 dark:border-primary-dark/10 flex gap-6 hover:border-primary-light dark:hover:border-primary-dark/40 transition-all duration-300 shadow-sm">
-                                        <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-100 dark:bg-black/20 flex-shrink-0">
-                                            <img src={p.image} className="w-full h-full object-cover" alt="" />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex justify-between items-start mb-2">
-                                                <h3 className="font-bold text-lg truncate dark:group-hover:text-primary-dark transition-colors">{p.title}</h3>
-                                                <div className="flex gap-2">
-                                                    <button onClick={() => handleEditProject(p)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"><Edit size={16} /></button>
-                                                    <button onClick={() => handleDeleteProject(p._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-center">
+                                    <h3 className="text-xl font-bold">Manage <span className="text-primary-light dark:text-primary-dark">Projects</span></h3>
+                                    <button
+                                        onClick={() => { setActiveTab('add-project'); setEditingProject(null); resetProject(); }}
+                                        className="flex items-center gap-2 px-4 py-2 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-xl font-bold text-sm shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-0.5 transition-all"
+                                    >
+                                        <Plus size={18} /> Add New Project
+                                    </button>
+                                </div>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {projects.map(p => (
+                                        <div key={p._id} className="bg-card-light dark:bg-card-dark p-6 rounded-2xl border border-gray-200 dark:border-primary-dark/10 flex gap-6 hover:border-primary-light dark:hover:border-primary-dark/40 transition-all duration-300 shadow-sm">
+                                            <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-100 dark:bg-black/20 flex-shrink-0">
+                                                <img src={p.image} className="w-full h-full object-cover" alt="" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <h3 className="font-bold text-lg truncate dark:group-hover:text-primary-dark transition-colors">{p.title}</h3>
+                                                    <div className="flex gap-2">
+                                                        <button onClick={() => handleEditProject(p)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"><Edit size={16} /></button>
+                                                        <button onClick={() => handleDeleteProject(p._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+                                                    </div>
+                                                </div>
+                                                <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark line-clamp-2 leading-relaxed mb-4">{p.description}</p>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {p.tags?.slice(0, 3).map((tag, i) => (
+                                                        <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark">{tag}</span>
+                                                    ))}
                                                 </div>
                                             </div>
-                                            <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark line-clamp-2 leading-relaxed mb-4">{p.description}</p>
-                                            <div className="flex flex-wrap gap-2">
-                                                {p.tags?.slice(0, 3).map((tag, i) => (
-                                                    <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark">{tag}</span>
-                                                ))}
-                                            </div>
                                         </div>
-                                    </div>
-                                ))}
-                                {projects.length === 0 && <p className="text-center py-20 text-text-secondary-light dark:text-text-secondary-dark col-span-full font-medium">No projects found.</p>}
+                                    ))}
+                                    {projects.length === 0 && <p className="text-center py-20 text-text-secondary-light dark:text-text-secondary-dark col-span-full font-medium">No projects found.</p>}
+                                </div>
                             </div>
                         )}
 
@@ -442,19 +453,30 @@ const Admin = () => {
                         )}
 
                         {activeTab === 'manage-skills' && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {skills.map(s => (
-                                    <div key={s._id} className="bg-card-light dark:bg-card-dark p-6 rounded-2xl border border-gray-200 dark:border-primary-dark/10 flex justify-between items-center group hover:border-primary-light dark:hover:border-primary-dark/40 transition-all duration-300">
-                                        <div>
-                                            <div className="font-bold text-lg">{s.name}</div>
-                                            <div className="text-[10px] font-bold text-primary-light dark:text-primary-dark uppercase tracking-wider mt-1">{s.category}</div>
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-center">
+                                    <h3 className="text-xl font-bold">Manage <span className="text-primary-light dark:text-primary-dark">Skills</span></h3>
+                                    <button
+                                        onClick={() => { setActiveTab('add-skill'); setEditingSkill(null); resetSkill(); }}
+                                        className="flex items-center gap-2 px-4 py-2 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-xl font-bold text-sm shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-0.5 transition-all"
+                                    >
+                                        <Plus size={18} /> Add New Skill
+                                    </button>
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {skills.map(s => (
+                                        <div key={s._id} className="bg-card-light dark:bg-card-dark p-6 rounded-2xl border border-gray-200 dark:border-primary-dark/10 flex justify-between items-center group hover:border-primary-light dark:hover:border-primary-dark/40 transition-all duration-300">
+                                            <div>
+                                                <div className="font-bold text-lg">{s.name}</div>
+                                                <div className="text-[10px] font-bold text-primary-light dark:text-primary-dark uppercase tracking-wider mt-1">{s.category}</div>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <button onClick={() => handleEditSkill(s)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"><Edit size={16} /></button>
+                                                <button onClick={() => handleDeleteSkill(s._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+                                            </div>
                                         </div>
-                                        <div className="flex gap-2">
-                                            <button onClick={() => handleEditSkill(s)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"><Edit size={16} /></button>
-                                            <button onClick={() => handleDeleteSkill(s._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         )}
 
@@ -478,19 +500,30 @@ const Admin = () => {
                         )}
 
                         {activeTab === 'manage-experience' && (
-                            <div className="space-y-4">
-                                {experience.map(e => (
-                                    <div key={e._id} className="bg-card-light dark:bg-card-dark p-6 rounded-2xl border border-gray-200 dark:border-primary-dark/10 flex flex-col sm:flex-row justify-between items-start sm:items-center group gap-4 hover:border-primary-light dark:hover:border-primary-dark/40 transition-all duration-300">
-                                        <div>
-                                            <h3 className="font-bold text-lg">{e.title}</h3>
-                                            <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">{e.subtitle} <span className="mx-2 opacity-30">•</span> {e.date}</p>
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-center">
+                                    <h3 className="text-xl font-bold">Manage <span className="text-primary-light dark:text-primary-dark">Experience</span></h3>
+                                    <button
+                                        onClick={() => { setActiveTab('add-experience'); setEditingExp(null); resetExp(); }}
+                                        className="flex items-center gap-2 px-4 py-2 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-xl font-bold text-sm shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-0.5 transition-all"
+                                    >
+                                        <Plus size={18} /> Add New Entry
+                                    </button>
+                                </div>
+                                <div className="space-y-4">
+                                    {experience.map(e => (
+                                        <div key={e._id} className="bg-card-light dark:bg-card-dark p-6 rounded-2xl border border-gray-200 dark:border-primary-dark/10 flex flex-col sm:flex-row justify-between items-start sm:items-center group gap-4 hover:border-primary-light dark:hover:border-primary-dark/40 transition-all duration-300">
+                                            <div>
+                                                <h3 className="font-bold text-lg">{e.title}</h3>
+                                                <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">{e.subtitle} <span className="mx-2 opacity-30">•</span> {e.date}</p>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <button onClick={() => handleEditExp(e)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"><Edit size={20} /></button>
+                                                <button onClick={() => handleDeleteExp(e._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors"><Trash2 size={20} /></button>
+                                            </div>
                                         </div>
-                                        <div className="flex gap-2">
-                                            <button onClick={() => handleEditExp(e)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"><Edit size={20} /></button>
-                                            <button onClick={() => handleDeleteExp(e._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors"><Trash2 size={20} /></button>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         )}
 
@@ -528,20 +561,31 @@ const Admin = () => {
                         )}
 
                         {activeTab === 'manage-socials' && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {socials.map(s => (
-                                    <div key={s._id} className="bg-card-light dark:bg-card-dark p-6 rounded-2xl border border-gray-200 dark:border-primary-dark/10 flex justify-between items-center group hover:border-primary-light dark:hover:border-primary-dark/40 transition-all duration-300">
-                                        <div className="min-w-0 flex-1">
-                                            <h3 className="font-bold text-lg leading-tight">{s.platform}</h3>
-                                            <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark truncate mt-1">{s.url}</p>
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-center">
+                                    <h3 className="text-xl font-bold">Manage <span className="text-primary-light dark:text-primary-dark">Socials</span></h3>
+                                    <button
+                                        onClick={() => { setActiveTab('add-social'); setEditingSocial(null); resetSocial(); }}
+                                        className="flex items-center gap-2 px-4 py-2 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-xl font-bold text-sm shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-0.5 transition-all"
+                                    >
+                                        <Plus size={18} /> Add New Social
+                                    </button>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {socials.map(s => (
+                                        <div key={s._id} className="bg-card-light dark:bg-card-dark p-6 rounded-2xl border border-gray-200 dark:border-primary-dark/10 flex justify-between items-center group hover:border-primary-light dark:hover:border-primary-dark/40 transition-all duration-300">
+                                            <div className="min-w-0 flex-1">
+                                                <h3 className="font-bold text-lg leading-tight">{s.platform}</h3>
+                                                <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark truncate mt-1">{s.url}</p>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <button onClick={() => handleEditSocial(s)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"><Edit size={20} /></button>
+                                                <button onClick={() => handleDeleteSocial(s._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors"><Trash2 size={20} /></button>
+                                            </div>
                                         </div>
-                                        <div className="flex gap-2">
-                                            <button onClick={() => handleEditSocial(s)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"><Edit size={20} /></button>
-                                            <button onClick={() => handleDeleteSocial(s._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors"><Trash2 size={20} /></button>
-                                        </div>
-                                    </div>
-                                ))}
-                                {socials.length === 0 && <p className="text-center py-20 text-text-secondary-light dark:text-text-secondary-dark col-span-full font-medium">No social links added yet.</p>}
+                                    ))}
+                                    {socials.length === 0 && <p className="text-center py-20 text-text-secondary-light dark:text-text-secondary-dark col-span-full font-medium">No social links added yet.</p>}
+                                </div>
                             </div>
                         )}
 
