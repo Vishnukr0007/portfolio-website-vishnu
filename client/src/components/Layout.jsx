@@ -103,7 +103,7 @@ const Layout = () => {
             </main>
 
             <footer className="py-8 text-center text-gray-500 dark:text-text-secondary border-t border-gray-100 dark:border-white/5 mt-auto relative">
-                <p>&copy; 2024 Vishnu K. All rights reserved.</p>
+                <p>&copy; 2026 Vishnu K. All rights reserved.</p>
                 <Link to="/login" className="absolute bottom-4 right-4 opacity-0 hover:opacity-10 cursor-default transition-opacity text-[8px]">admin entry</Link>
             </footer>
         </div>
