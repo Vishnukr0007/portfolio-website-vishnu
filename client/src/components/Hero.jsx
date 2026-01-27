@@ -18,7 +18,7 @@ const Hero = () => {
                             transition={{ duration: 0.5 }}
                             className="text-4xl sm:text-5xl md:text-7xl font-bold font-heading mb-6 leading-tight dark:text-white"
                         >
-                            {contactInfo?.heroTitle?.split(' ')[0]} to my <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-light to-primary-dark dark:from-primary-dark dark:to-primary-light">{contactInfo?.heroTitle?.split(' ').slice(1).join(' ') || 'Portfolio'}</span>
+                            {contactInfo?.heroTitle?.split(' ')[0]} <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-light to-primary-dark dark:from-primary-dark dark:to-primary-light">{contactInfo?.heroTitle?.split(' ').slice(1).join(' ') || 'Portfolio'}</span>
                             <div className="text-2xl sm:text-3xl md:text-3xl mt-4 font-medium text-gray-500 dark:text-text-secondary-dark">
                                 {contactInfo?.heroSubtitle || 'MERN Stack & Full-Stack Engineer'}
                             </div>
