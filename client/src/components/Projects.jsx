@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { ExternalLink, Github } from 'lucide-react';
@@ -6,6 +6,7 @@ import ProjectSkeleton from './skeletons/ProjectSkeleton';
 
 const Projects = () => {
     const { projects, loading } = useSelector((state) => state.portfolio);
+    const [activeCategory, setActiveCategory] = useState('All');
 
     if (loading) {
         return (
@@ -26,6 +27,11 @@ const Projects = () => {
         return null;
     }
 
+    const categories = ['All', ...new Set(projects.map(p => p.category).filter(Boolean))];
+    const filteredProjects = activeCategory === 'All' 
+        ? projects 
+        : projects.filter(p => p.category === activeCategory);
+
     return (
         <section id="projects" className="py-24 bg-gray-50 dark:bg-black/20">
             <div className="container mx-auto px-6">
@@ -33,13 +39,36 @@ const Projects = () => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-4xl md:text-5xl font-bold font-heading mb-16 dark:text-white text-center md:text-left"
+                    className="text-4xl md:text-5xl font-bold font-heading mb-12 dark:text-white text-center md:text-left"
                 >
                     Featured <span className="text-primary border-b-4 border-primary/20 pb-2">Projects</span>
                 </motion.h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-center">
-                    {projects.map((project, idx) => (
+                {categories.length > 1 && (
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="flex flex-wrap gap-3 justify-center md:justify-start mb-12"
+                    >
+                        {categories.map((cat) => (
+                            <button
+                                key={cat}
+                                onClick={() => setActiveCategory(cat)}
+                                className={`px-5 py-2 rounded-full font-medium transition-all duration-300 ${
+                                    activeCategory === cat 
+                                    ? 'bg-primary-light dark:bg-primary-dark text-white shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20'
+                                    : 'bg-white/10 text-gray-600 dark:text-gray-400 hover:bg-primary-light/10 dark:hover:bg-primary-dark/10 hover:text-primary-light dark:hover:text-primary-dark'
+                                }`}
+                            >
+                                {cat}
+                            </button>
+                        ))}
+                    </motion.div>
+                )}
+
+                <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-center">
+                    {filteredProjects.map((project, idx) => (
                         <motion.div
                             key={project._id}
                             initial={{ opacity: 0, y: 30 }}
@@ -106,7 +135,7 @@ const Projects = () => {
                             </div>
                         </motion.div>
                     ))}
-                </div>
+                </motion.div>
             </div>
         </section>
     );

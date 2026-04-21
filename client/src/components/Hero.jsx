@@ -1,11 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
+import Particles from './ui/Particles';
+import MagneticButton from './ui/MagneticButton';
 
 const Hero = () => {
     const { contactInfo } = useSelector((state) => state.portfolio);
     return (
         <section id="home" className="min-h-screen flex items-center pt-16 relative overflow-hidden">
+            <Particles />
             {/* Background Glow */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[150px] -z-10 translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
 
@@ -39,23 +42,29 @@ const Hero = () => {
                             transition={{ duration: 0.5, delay: 0.4 }}
                             className="flex flex-wrap gap-4 justify-center md:justify-start"
                         >
-                            <a href="#projects" className="px-8 py-4 rounded-full bg-primary-light dark:bg-primary-dark text-white dark:text-black font-bold shadow-lg shadow-primary-light/30 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all">
-                                View Work
-                            </a>
-                            <a
-                                href="#contact"
-                                className="px-8 py-4 rounded-full border-2 border-primary-light/20 dark:border-primary-dark/20 text-text-primary-light dark:text-text-primary-dark font-semibold hover:bg-primary-light/5 dark:hover:bg-primary-dark/5 transition-all text-center flex items-center justify-center gap-2"
-                            >
-                                Connect
-                            </a>
-                            <a
-                                href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/resume/download`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="px-8 py-4 rounded-full border-2 border-primary-light/20 dark:border-primary-dark/20 text-primary-light dark:text-primary-dark font-semibold hover:bg-primary-light/5 dark:hover:bg-primary-dark/5 transition-all text-center flex items-center justify-center gap-2"
-                            >
-                                Download Resume
-                            </a>
+                            <MagneticButton>
+                                <a href="#projects" className="inline-block px-8 py-4 rounded-full bg-primary-light dark:bg-primary-dark text-white dark:text-black font-bold shadow-lg shadow-primary-light/30 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all">
+                                    View Work
+                                </a>
+                            </MagneticButton>
+                            <MagneticButton>
+                                <a
+                                    href="#contact"
+                                    className="inline-block px-8 py-4 rounded-full border-2 border-primary-light/20 dark:border-primary-dark/20 text-text-primary-light dark:text-text-primary-dark font-semibold hover:bg-primary-light/5 dark:hover:bg-primary-dark/5 transition-all text-center flex items-center justify-center gap-2"
+                                >
+                                    Connect
+                                </a>
+                            </MagneticButton>
+                            <MagneticButton>
+                                <a
+                                    href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/resume/download`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-block px-8 py-4 rounded-full border-2 border-primary-light/20 dark:border-primary-dark/20 text-primary-light dark:text-primary-dark font-semibold hover:bg-primary-light/5 dark:hover:bg-primary-dark/5 transition-all text-center flex items-center justify-center gap-2"
+                                >
+                                    Download Resume
+                                </a>
+                            </MagneticButton>
                         </motion.div>
                     </div>
 

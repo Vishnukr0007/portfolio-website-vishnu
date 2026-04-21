@@ -4,6 +4,7 @@ import { Outlet, Link } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 import { Menu, X, Home, Cpu, Folder, Lock } from 'lucide-react';
 import { fetchContactInfo } from '../redux/slices/portfolioSlice';
+import QuickActions from './ui/QuickActions';
 
 const Layout = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -106,6 +107,8 @@ const Layout = () => {
                 <p>&copy; 2026 Vishnu K. All rights reserved.</p>
                 <Link to="/login" className="absolute bottom-4 right-4 opacity-0 hover:opacity-10 cursor-default transition-opacity text-[8px]">admin entry</Link>
             </footer>
+
+            <QuickActions />
         </div>
     );
 };

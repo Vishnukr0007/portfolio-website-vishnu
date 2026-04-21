@@ -6,6 +6,7 @@ import Skills from '../components/Skills';
 import Projects from '../components/Projects';
 import Experience from '../components/Experience';
 import Contact from '../components/Contact';
+import GithubStats from '../components/GithubStats';
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const Home = () => {
             <Hero />
             <Skills />
             <Projects />
+            <GithubStats />
             <Experience />
             <Contact />
         </div>
