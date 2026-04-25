@@ -6,6 +6,18 @@ import ExperienceSkeleton from './skeletons/ExperienceSkeleton';
 const Experience = () => {
     const { experience, loading } = useSelector((state) => state.portfolio);
 
+    const containerRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start center", "end center"]
+    });
+    
+    const scaleY = useSpring(scrollYProgress, {
+        stiffness: 100,
+        damping: 30,
+        restDelta: 0.001
+    });
+
     if (loading) {
         return (
             <section id="experience" className="py-24">
@@ -24,18 +36,6 @@ const Experience = () => {
     if (!experience || experience.length === 0) {
         return null;
     }
-
-    const containerRef = useRef(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start center", "end center"]
-    });
-    
-    const scaleY = useSpring(scrollYProgress, {
-        stiffness: 100,
-        damping: 30,
-        restDelta: 0.001
-    });
 
     return (
         <section id="experience" className="py-24">
