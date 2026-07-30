@@ -6,7 +6,7 @@ const certificate = {
     issuer: 'Outfox Technologies',
     date: 'Apr–May 2026',
     description: 'Completed a 10-day industrial training workshop focused on Node.js.',
-    image: '/certificates/outfox-nodejs-training.jpg',
+    image: '/certificates/outfox-nodejs-training-clean.jpg',
 };
 
 const Certifications = () => (
