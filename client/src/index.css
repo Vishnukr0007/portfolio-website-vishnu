@@ -12,6 +12,37 @@
   --card-bg: #ffffff;
 }
 
+.cosmic-stars {
+  background-image:
+    radial-gradient(circle at 8% 14%, rgba(255,255,255,.9) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 20% 72%, rgba(251,191,36,.75) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 34% 32%, rgba(255,255,255,.65) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 52% 12%, rgba(110,231,183,.65) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 70% 68%, rgba(255,255,255,.7) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 88% 27%, rgba(251,191,36,.7) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 95% 84%, rgba(255,255,255,.55) 0 1px, transparent 1.5px);
+  background-size: 310px 290px, 420px 380px, 500px 420px, 360px 340px, 470px 450px, 390px 370px, 550px 510px;
+}
+
+.cosmic-grid {
+  background-image: linear-gradient(rgba(148, 163, 184, .12) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, .12) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, transparent, black 22%, black 78%, transparent);
+}
+
+.cosmic-panel {
+  @apply border border-white/10 bg-slate-950/50 backdrop-blur-xl;
+  box-shadow: 0 24px 70px -36px rgba(0, 0, 0, .85);
+}
+
+.cosmic-section-title {
+  @apply text-4xl font-bold font-heading text-slate-950 dark:text-white md:text-5xl;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
 .dark {
   --bg-color: #121212;
   --text-main: #f8fafc;

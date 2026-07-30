@@ -8,6 +8,7 @@ import Projects from '../components/Projects';
 import Experience from '../components/Experience';
 import Contact from '../components/Contact';
 import GithubStats from '../components/GithubStats';
+import CosmicBackground from '../components/ui/CosmicBackground';
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -28,7 +29,8 @@ const Home = () => {
     }
 
     return (
-        <div className="dark:bg-dark transition-colors duration-300">
+        <div className="relative isolate overflow-hidden dark:bg-[#070b18] transition-colors duration-300">
+            <CosmicBackground />
             <Hero />
             <Skills />
             <Certifications />
