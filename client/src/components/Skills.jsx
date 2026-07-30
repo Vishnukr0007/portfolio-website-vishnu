@@ -20,7 +20,7 @@ const Skills = () => {
         return (
             <section id="skills" className="py-16">
                 <div className="container mx-auto px-6">
-                    <div className="h-10 bg-slate-200 dark:bg-slate-800 w-1/3 mb-12 rounded animate-pulse"></div>
+                    <div className="h-10 bg-slate-200 dark:bg-slate-800 w-1/3 mb-12 rounded animate-pulse" />
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[1, 2, 3, 4].map((n) => (
                             <SkillSkeleton key={n} />
@@ -31,24 +31,84 @@ const Skills = () => {
         );
     }
 
-    // Default fallback skills if database has empty set
+    // Default fallback skills if database is empty
     const defaultSkills = [
-        { category: 'Frontend', name: 'React.js', level: 90 },
-        { category: 'Frontend', name: 'JavaScript (ES6+)', level: 90 },
-        { category: 'Frontend', name: 'Tailwind CSS', level: 88 },
-        { category: 'Frontend', name: 'HTML5 / CSS3', level: 95 },
-        { category: 'Backend', name: 'Node.js', level: 85 },
-        { category: 'Backend', name: 'Express.js', level: 85 },
-        { category: 'Backend', name: 'REST APIs', level: 90 },
-        { category: 'Database', name: 'MongoDB', level: 82 },
-        { category: 'Database', name: 'Mongoose ORM', level: 85 },
-        { category: 'Tools', name: 'Git & GitHub', level: 88 },
-        { category: 'Tools', name: 'Postman', level: 85 },
-        { category: 'Tools', name: 'Vite / Vercel', level: 85 },
+        { category: 'Frontend', name: 'React.js' },
+        { category: 'Frontend', name: 'JavaScript (ES6+)' },
+        { category: 'Frontend', name: 'Tailwind CSS' },
+        { category: 'Frontend', name: 'HTML5 / CSS3' },
+        { category: 'Backend', name: 'Node.js' },
+        { category: 'Backend', name: 'Express.js' },
+        { category: 'Backend', name: 'REST APIs' },
+        { category: 'Database & API', name: 'MongoDB' },
+        { category: 'Database & API', name: 'Mongoose ORM' },
+        { category: 'Tools', name: 'Git & GitHub' },
+        { category: 'Tools', name: 'Postman' },
+        { category: 'Tools', name: 'Vite / Vercel' },
     ];
 
     const activeSkills = skills && skills.length > 0 ? skills : defaultSkills;
-    const categories = ['Frontend', 'Backend', 'Database', 'Tools'];
+
+    // Helper to group skills into standard clusters + extra dynamic categories
+    const standardCategories = ['Frontend', 'Backend', 'Database', 'Tools'];
+
+    const isMatchCategory = (catName, skillCategory) => {
+        if (!skillCategory) return false;
+        const sCat = skillCategory.toLowerCase();
+        const targetCat = catName.toLowerCase();
+
+        if (targetCat === 'frontend' && (sCat.includes('front') || sCat.includes('ui') || sCat.includes('web'))) {
+            return true;
+        }
+        if (targetCat === 'backend' && (sCat.includes('back') || sCat.includes('server') || sCat.includes('node'))) {
+            return true;
+        }
+        if (targetCat === 'database' && (sCat.includes('data') || sCat.includes('db') || sCat.includes('api') || sCat.includes('mongo') || sCat.includes('sql'))) {
+            return true;
+        }
+        if (targetCat === 'tools' && (sCat.includes('tool') || sCat.includes('devops') || sCat.includes('git') || sCat.includes('other'))) {
+            return true;
+        }
+
+        return sCat === targetCat;
+    };
+
+    // Build clusters map
+    const groupedClusters = {};
+    standardCategories.forEach((cat) => {
+        groupedClusters[cat] = [];
+    });
+
+    const unassignedSkills = [];
+
+    activeSkills.forEach((skill) => {
+        let matched = false;
+        for (const cat of standardCategories) {
+            if (isMatchCategory(cat, skill.category)) {
+                groupedClusters[cat].push(skill);
+                matched = true;
+                break;
+            }
+        }
+        if (!matched) {
+            unassignedSkills.push(skill);
+        }
+    });
+
+    // If there are unassigned skills, group them by their explicit category string
+    if (unassignedSkills.length > 0) {
+        unassignedSkills.forEach((skill) => {
+            const rawCat = skill.category || 'Other';
+            if (!groupedClusters[rawCat]) {
+                groupedClusters[rawCat] = [];
+            }
+            groupedClusters[rawCat].push(skill);
+        });
+    }
+
+    const displayCategories = Object.keys(groupedClusters).filter(
+        (cat) => groupedClusters[cat].length > 0
+    );
 
     return (
         <section id="skills" className="py-20 relative">
@@ -78,10 +138,8 @@ const Skills = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {categories.map((category, idx) => {
-                        const categorySkills = activeSkills.filter(
-                            (s) => s.category?.toLowerCase() === category.toLowerCase()
-                        );
+                    {displayCategories.map((category, idx) => {
+                        const categorySkills = groupedClusters[category];
 
                         return (
                             <GlowCard
@@ -106,7 +164,7 @@ const Skills = () => {
                                 <div className="flex flex-wrap gap-2.5 flex-grow">
                                     {categorySkills.map((skill, sIdx) => (
                                         <motion.div
-                                            key={sIdx}
+                                            key={skill._id || sIdx}
                                             whileHover={{ scale: 1.05 }}
                                             className="group flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all cursor-default"
                                         >
