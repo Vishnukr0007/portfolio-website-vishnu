@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchProjects, fetchSkills, fetchExperience } from '../redux/slices/portfolioSlice';
 import Hero from '../components/Hero';
 import Skills from '../components/Skills';
+import Certifications from '../components/Certifications';
 import Projects from '../components/Projects';
 import Experience from '../components/Experience';
 import Contact from '../components/Contact';
@@ -30,6 +31,7 @@ const Home = () => {
         <div className="dark:bg-dark transition-colors duration-300">
             <Hero />
             <Skills />
+            <Certifications />
             <Projects />
             <GithubStats />
             <Experience />

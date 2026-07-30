@@ -85,7 +85,7 @@ const Contact = () => {
                             value={formData.name}
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-lg bg-white dark:bg-dark border border-gray-200 dark:border-white/10 focus:border-primary-light dark:focus:border-primary-dark focus:ring-1 focus:ring-primary-light dark:focus:ring-primary-dark outline-none transition-all dark:text-white"
-                            placeholder="John Doe"
+                            placeholder="Your full name"
                         />
                     </div>
                     <div className="mb-6 text-left">
@@ -96,7 +96,7 @@ const Contact = () => {
                             value={formData.email}
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-lg bg-white dark:bg-dark border border-gray-200 dark:border-white/10 focus:border-primary-light dark:focus:border-primary-dark focus:ring-1 focus:ring-primary-light dark:focus:ring-primary-dark outline-none transition-all dark:text-white"
-                            placeholder="john@example.com"
+                            placeholder="your.name@company.com"
                         />
                     </div>
                     <div className="mb-8 text-left">
@@ -107,7 +107,7 @@ const Contact = () => {
                             onChange={handleChange}
                             rows="4"
                             className="w-full px-4 py-3 rounded-lg bg-white dark:bg-dark border border-gray-200 dark:border-white/10 focus:border-primary-light dark:focus:border-primary-dark focus:ring-1 focus:ring-primary-light dark:focus:ring-primary-dark outline-none transition-all dark:text-white resize-none"
-                            placeholder="Hello, I'd like to talk about..."
+                            placeholder="Tell me about your project, role, or collaboration idea..."
                         ></textarea>
                     </div>
                     
