@@ -5,19 +5,20 @@ import { useForm } from 'react-hook-form';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import { logout } from '../redux/slices/authSlice';
-import { fetchProjects, fetchSkills, fetchExperience, fetchSocials, fetchContactInfo } from '../redux/slices/portfolioSlice';
-import { Trash2, Edit, Plus, Briefcase, Award, Zap, LogOut, Share2, Settings, FileText, Download } from 'lucide-react';
+import { fetchProjects, fetchSkills, fetchExperience, fetchSocials, fetchContactInfo, fetchCertificates } from '../redux/slices/portfolioSlice';
+import { Trash2, Edit, Plus, Briefcase, Award, Zap, LogOut, Share2, Settings, FileText, Download, BadgeCheck } from 'lucide-react';
 import Swal from 'sweetalert2';
 
 const Admin = () => {
     const { isAdmin, adminToken } = useSelector((state) => state.auth);
-    const { projects, skills, experience, socials, contactInfo } = useSelector((state) => state.portfolio);
+    const { projects, skills, experience, socials, contactInfo, certificates } = useSelector((state) => state.portfolio);
     const dispatch = useDispatch();
     const [activeTab, setActiveTab] = useState('projects');
     const [editingProject, setEditingProject] = useState(null);
     const [editingSkill, setEditingSkill] = useState(null);
     const [editingExp, setEditingExp] = useState(null);
     const [editingSocial, setEditingSocial] = useState(null);
+    const [editingCertificate, setEditingCertificate] = useState(null);
 
     // Auth now handled by api service automatically
 
@@ -27,6 +28,7 @@ const Admin = () => {
     const { register: registerExp, handleSubmit: handleExpSubmit, reset: resetExp, setValue: setExpValue } = useForm();
     const { register: registerSocial, handleSubmit: handleSocialSubmit, reset: resetSocial, setValue: setSocialValue } = useForm();
     const { register: registerContact, handleSubmit: handleContactSubmit, setValue: setContactValue } = useForm();
+    const { register: registerCertificate, handleSubmit: handleCertificateSubmit, reset: resetCertificate, setValue: setCertificateValue } = useForm();
 
     useEffect(() => {
         dispatch(fetchProjects());
@@ -34,6 +36,7 @@ const Admin = () => {
         dispatch(fetchExperience());
         dispatch(fetchSocials());
         dispatch(fetchContactInfo());
+        dispatch(fetchCertificates());
     }, [dispatch]);
 
     useEffect(() => {
@@ -268,6 +271,83 @@ const Admin = () => {
         setActiveTab('add-social');
     };
 
+    // Certificate Logic
+    const onCertificateSubmit = async (data) => {
+        const toastId = toast.loading(editingCertificate ? 'Updating certificate...' : 'Adding certificate...');
+        try {
+            let imageUrl = editingCertificate?.image || '';
+            if (data.imageFile?.[0]) {
+                const formData = new FormData();
+                formData.append('image', data.imageFile[0]);
+                const uploadRes = await api.post('/upload', formData);
+                imageUrl = uploadRes.data.url;
+            }
+
+            const certificateData = {
+                title: data.title,
+                issuer: data.issuer,
+                issueDate: data.issueDate,
+                description: data.description || '',
+                image: imageUrl,
+                credentialUrl: data.credentialUrl || '',
+            };
+
+            if (!certificateData.image) {
+                toast.error('Please upload a certificate image.', { id: toastId });
+                return;
+            }
+
+            if (editingCertificate) {
+                await api.put(`/certificates/${editingCertificate._id}`, certificateData);
+                toast.success('Certificate updated!', { id: toastId });
+            } else {
+                await api.post('/certificates', certificateData);
+                toast.success('Certificate added!', { id: toastId });
+            }
+
+            resetCertificate();
+            setEditingCertificate(null);
+            dispatch(fetchCertificates());
+            setActiveTab('manage-certificates');
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Unable to save certificate.', { id: toastId });
+        }
+    };
+
+    const handleEditCertificate = (certificate) => {
+        setEditingCertificate(certificate);
+        setCertificateValue('title', certificate.title);
+        setCertificateValue('issuer', certificate.issuer);
+        setCertificateValue('issueDate', certificate.issueDate);
+        setCertificateValue('description', certificate.description || '');
+        setCertificateValue('credentialUrl', certificate.credentialUrl || '');
+        setActiveTab('add-certificate');
+    };
+
+    const handleDeleteCertificate = async (id) => {
+        const result = await Swal.fire({
+            title: 'Delete certificate?',
+            text: 'This certificate will no longer appear on your website.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3b82f6',
+            cancelButtonColor: '#ef4444',
+            confirmButtonText: 'Yes, delete it!',
+            background: document.documentElement.classList.contains('dark') ? '#1e1e20' : '#fff',
+            color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await api.delete(`/certificates/${id}`);
+                Swal.fire('Deleted!', 'Certificate removed.', 'success');
+                dispatch(fetchCertificates());
+            } catch (error) {
+                toast.error(error.response?.data?.message || 'Unable to delete certificate.');
+            }
+        }
+    };
+
     // Contact & Hero Info Logic
     const onContactSubmit = async (data) => {
         const toastId = toast.loading('Updating settings...');
@@ -329,6 +409,14 @@ const Admin = () => {
                                         <div className="flex items-center gap-3"><Award size={20} /> <span className="text-sm font-semibold">Experience</span></div>
                                         <span className={`text-[10px] px-2 py-0.5 rounded-full ${activeTab === 'manage-experience' || activeTab === 'add-experience' ? 'bg-black/20 dark:bg-black/20' : 'bg-gray-100 dark:bg-white/10'}`}>{experience.length}</span>
                                     </button>
+
+                                    <button
+                                        onClick={() => setActiveTab('manage-certificates')}
+                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 ${activeTab === 'manage-certificates' || activeTab === 'add-certificate' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20' : 'hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark'}`}
+                                    >
+                                        <div className="flex items-center gap-3"><BadgeCheck size={20} /> <span className="text-sm font-semibold">Certificates</span></div>
+                                        <span className={`text-[10px] px-2 py-0.5 rounded-full ${activeTab === 'manage-certificates' || activeTab === 'add-certificate' ? 'bg-black/20 dark:bg-black/20' : 'bg-gray-100 dark:bg-white/10'}`}>{certificates.length}</span>
+                                    </button>
                                 </div>
 
                                 <div className="pt-4 border-t border-gray-100 dark:border-white/5 space-y-1">
@@ -372,6 +460,7 @@ const Admin = () => {
                     <button onClick={() => setActiveTab('projects')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'projects' || activeTab === 'add-project' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Briefcase size={20} /></button>
                     <button onClick={() => setActiveTab('manage-skills')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-skills' || activeTab === 'add-skill' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Zap size={20} /></button>
                     <button onClick={() => setActiveTab('manage-experience')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-experience' || activeTab === 'add-experience' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Award size={20} /></button>
+                    <button onClick={() => setActiveTab('manage-certificates')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-certificates' || activeTab === 'add-certificate' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><BadgeCheck size={20} /></button>
                     <button onClick={() => setActiveTab('manage-socials')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-socials' || activeTab === 'add-social' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Share2 size={20} /></button>
                     <button onClick={() => setActiveTab('contact-settings')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'contact-settings' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Settings size={20} /></button>
                     <button onClick={() => setActiveTab('hero-settings')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'hero-settings' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><FileText size={20} /></button>
@@ -384,13 +473,13 @@ const Admin = () => {
                         {/* Mobile Header Tabs (Switch between Manage & Add) */}
                         <div className="md:hidden flex bg-gray-100 dark:bg-white/5 p-1 rounded-xl mb-6">
                             <button
-                                onClick={() => setActiveTab(activeTab.startsWith('add') ? activeTab.replace('add-', '').replace('project', 'projects').replace('skill', 'manage-skills').replace('experience', 'manage-experience').replace('social', 'manage-socials') : activeTab)}
+                                onClick={() => setActiveTab(activeTab.startsWith('add') ? activeTab.replace('add-', '').replace('project', 'projects').replace('skill', 'manage-skills').replace('experience', 'manage-experience').replace('certificate', 'manage-certificates').replace('social', 'manage-socials') : activeTab)}
                                 className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${!activeTab.startsWith('add') ? 'bg-white dark:bg-white/10 shadow-sm' : 'text-gray-500'}`}
                             >
                                 Manage
                             </button>
                             <button
-                                onClick={() => setActiveTab(activeTab.startsWith('add') ? activeTab : activeTab === 'projects' ? 'add-project' : activeTab === 'manage-skills' ? 'add-skill' : activeTab === 'manage-experience' ? 'add-experience' : 'add-social')}
+                                onClick={() => setActiveTab(activeTab.startsWith('add') ? activeTab : activeTab === 'projects' ? 'add-project' : activeTab === 'manage-skills' ? 'add-skill' : activeTab === 'manage-experience' ? 'add-experience' : activeTab === 'manage-certificates' ? 'add-certificate' : 'add-social')}
                                 className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${activeTab.startsWith('add') ? 'bg-white dark:bg-white/10 shadow-sm' : 'text-gray-500'}`}
                             >
                                 Add New
@@ -433,6 +522,86 @@ const Admin = () => {
                                     ))}
                                     {projects.length === 0 && <p className="text-center py-20 text-text-secondary-light dark:text-text-secondary-dark col-span-full font-medium">No projects found.</p>}
                                 </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'manage-certificates' && (
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-center gap-4">
+                                    <div>
+                                        <h3 className="text-xl font-bold">Manage <span className="text-primary-light dark:text-primary-dark">Certificates</span></h3>
+                                        <p className="mt-1 text-sm text-text-secondary-light dark:text-text-secondary-dark">Showcase your training and credentials to recruiters.</p>
+                                    </div>
+                                    <button
+                                        onClick={() => { setActiveTab('add-certificate'); setEditingCertificate(null); resetCertificate(); }}
+                                        className="flex shrink-0 items-center gap-2 px-4 py-2 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-xl font-bold text-sm shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-0.5 transition-all"
+                                    >
+                                        <Plus size={18} /> Add Certificate
+                                    </button>
+                                </div>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {certificates.map((certificate) => (
+                                        <div key={certificate._id} className="bg-card-light dark:bg-card-dark p-5 rounded-2xl border border-gray-200 dark:border-primary-dark/10 flex gap-5 shadow-sm">
+                                            <img src={certificate.image} alt="" className="w-28 h-20 rounded-xl object-cover bg-gray-100 dark:bg-black/20 flex-shrink-0" />
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex justify-between gap-2">
+                                                    <div className="min-w-0">
+                                                        <h4 className="font-bold truncate">{certificate.title}</h4>
+                                                        <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark truncate">{certificate.issuer} · {certificate.issueDate}</p>
+                                                    </div>
+                                                    <div className="flex gap-1 shrink-0">
+                                                        <button onClick={() => handleEditCertificate(certificate)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors" aria-label={`Edit ${certificate.title}`}><Edit size={16} /></button>
+                                                        <button onClick={() => handleDeleteCertificate(certificate._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors" aria-label={`Delete ${certificate.title}`}><Trash2 size={16} /></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {certificates.length === 0 && <p className="text-center py-20 text-text-secondary-light dark:text-text-secondary-dark col-span-full font-medium">No certificates yet. Add your first credential to display it on the home page.</p>}
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'add-certificate' && (
+                            <div className="max-w-3xl mx-auto bg-card-light dark:bg-card-dark p-8 md:p-12 rounded-3xl border border-gray-200 dark:border-primary-dark/10 shadow-2xl">
+                                <h2 className="text-2xl md:text-3xl font-bold font-heading mb-3">{editingCertificate ? 'Edit' : 'Add'} <span className="text-primary-light dark:text-primary-dark">Certificate</span></h2>
+                                <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-8">Upload the certificate image and add clear details for recruiters.</p>
+                                <form onSubmit={handleCertificateSubmit(onCertificateSubmit)} className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Certificate title</label>
+                                            <input {...registerCertificate('title')} placeholder="e.g. Node.js Industrial Training Workshop" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Issued by</label>
+                                            <input {...registerCertificate('issuer')} placeholder="e.g. Outfox Technologies" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Issue date</label>
+                                            <input {...registerCertificate('issueDate')} placeholder="e.g. Apr–May 2026" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Verification link (optional)</label>
+                                            <input type="url" {...registerCertificate('credentialUrl')} placeholder="https://credential-provider.com/..." className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Short description</label>
+                                        <textarea {...registerCertificate('description')} rows={3} placeholder="Summarize what you learned or achieved." className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none resize-none" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Certificate image</label>
+                                        {editingCertificate?.image && <img src={editingCertificate.image} alt="Current certificate" className="w-40 h-28 object-cover rounded-xl border border-gray-200 dark:border-white/10" />}
+                                        <label className="flex items-center justify-center p-6 bg-gray-50 dark:bg-black/20 rounded-xl border border-dashed border-gray-300 dark:border-white/10 hover:border-primary-light dark:hover:border-primary-dark transition-all cursor-pointer">
+                                            <input type="file" accept="image/*" {...registerCertificate('imageFile')} className="hidden" />
+                                            <span className="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">{editingCertificate ? 'Choose a new image to replace the current one' : 'Choose certificate image'}</span>
+                                        </label>
+                                    </div>
+                                    <button type="submit" className="w-full py-5 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all">{editingCertificate ? 'Update Certificate' : 'Add Certificate'}</button>
+                                </form>
                             </div>
                         )}
 

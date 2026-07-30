@@ -8,7 +8,7 @@ import Home from './pages/Home';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
 import { setTheme } from './redux/slices/themeSlice';
-import { fetchSocials, fetchContactInfo } from './redux/slices/portfolioSlice';
+import { fetchSocials, fetchContactInfo, fetchCertificates } from './redux/slices/portfolioSlice';
 
 function App() {
   const dispatch = useDispatch();
@@ -18,6 +18,7 @@ function App() {
     // Initial data fetch
     dispatch(fetchSocials());
     dispatch(fetchContactInfo());
+    dispatch(fetchCertificates());
     
     // Initial theme set
     if (darkMode) {

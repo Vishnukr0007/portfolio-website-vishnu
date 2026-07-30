@@ -1,15 +1,13 @@
 import { motion } from 'framer-motion';
 import { Award, Building2, CalendarDays, ExternalLink } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
-const certificate = {
-    title: 'Node.js Industrial Training Workshop',
-    issuer: 'Outfox Technologies',
-    date: 'Apr–May 2026',
-    description: 'Completed a 10-day industrial training workshop focused on Node.js.',
-    image: '/certificates/outfox-nodejs-training-clean.jpg',
-};
+const Certifications = () => {
+    const { certificates } = useSelector((state) => state.portfolio);
 
-const Certifications = () => (
+    if (certificates.length === 0) return null;
+
+    return (
     <section id="certifications" className="py-24 bg-gray-50 dark:bg-black/20">
         <div className="container mx-auto px-6">
             <motion.div
@@ -29,11 +27,14 @@ const Certifications = () => (
                 </p>
             </motion.div>
 
+            <div className="grid gap-8 lg:grid-cols-2">
+                {certificates.map((certificate) => (
             <motion.article
+                key={certificate._id}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="grid overflow-hidden rounded-3xl border border-gray-200 bg-card-light shadow-xl dark:border-primary-dark/20 dark:bg-card-dark md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"
+                className="grid overflow-hidden rounded-3xl border border-gray-200 bg-card-light shadow-xl dark:border-primary-dark/20 dark:bg-card-dark"
             >
                 <a
                     href={certificate.image}
@@ -61,11 +62,11 @@ const Certifications = () => (
 
                     <div className="mt-8 space-y-3 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">
                         <p className="flex items-center gap-3"><Building2 className="text-primary-light dark:text-primary-dark" size={19} /> {certificate.issuer}</p>
-                        <p className="flex items-center gap-3"><CalendarDays className="text-primary-light dark:text-primary-dark" size={19} /> {certificate.date}</p>
+                        <p className="flex items-center gap-3"><CalendarDays className="text-primary-light dark:text-primary-dark" size={19} /> {certificate.issueDate}</p>
                     </div>
 
                     <a
-                        href={certificate.image}
+                        href={certificate.credentialUrl || certificate.image}
                         target="_blank"
                         rel="noreferrer"
                         className="mt-8 inline-flex w-fit items-center gap-2 rounded-xl bg-primary-light px-5 py-3 font-bold text-white transition-transform hover:-translate-y-0.5 dark:bg-primary-dark dark:text-black"
@@ -74,8 +75,11 @@ const Certifications = () => (
                     </a>
                 </div>
             </motion.article>
+                ))}
+            </div>
         </div>
     </section>
-);
+    );
+};
 
 export default Certifications;

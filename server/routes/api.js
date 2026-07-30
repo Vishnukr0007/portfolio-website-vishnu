@@ -8,6 +8,7 @@ const { getProjects, createProject, deleteProject, updateProject } = require('..
 const { getSkills, createSkill, deleteSkill, updateSkill } = require('../controllers/skillController');
 const { getExperience, createExperience, deleteExperience, updateExperience } = require('../controllers/experienceController');
 const { getSocials, createSocial, deleteSocial, updateSocial } = require('../controllers/socialController');
+const { getCertificates, createCertificate, updateCertificate, deleteCertificate } = require('../controllers/certificateController');
 const { getContactInfo, updateContactInfo } = require('../controllers/contactInfoController');
 const { uploadImage } = require('../controllers/uploadController');
 const auth = require('../middleware/auth');
@@ -35,6 +36,12 @@ router.get('/socials', getSocials);
 router.post('/socials', auth, createSocial);
 router.put('/socials/:id', auth, updateSocial);
 router.delete('/socials/:id', auth, deleteSocial);
+
+// Certificates
+router.get('/certificates', getCertificates);
+router.post('/certificates', auth, createCertificate);
+router.put('/certificates/:id', auth, updateCertificate);
+router.delete('/certificates/:id', auth, deleteCertificate);
 
 // Contact Info
 router.get('/contact-info', getContactInfo);

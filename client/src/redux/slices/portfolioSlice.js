@@ -26,6 +26,11 @@ export const fetchContactInfo = createAsyncThunk('portfolio/fetchContactInfo', a
     return response.data;
 });
 
+export const fetchCertificates = createAsyncThunk('portfolio/fetchCertificates', async () => {
+    const response = await api.get('/certificates');
+    return response.data;
+});
+
 const portfolioSlice = createSlice({
   name: 'portfolio',
   initialState: {
@@ -33,6 +38,7 @@ const portfolioSlice = createSlice({
     skills: [],
     experience: [],
     socials: [],
+    certificates: [],
     contactInfo: null,
     loading: false,
     error: null,
@@ -65,6 +71,10 @@ const portfolioSlice = createSlice({
       // Contact Info
       .addCase(fetchContactInfo.fulfilled, (state, action) => {
           state.contactInfo = action.payload;
+      })
+      // Certificates
+      .addCase(fetchCertificates.fulfilled, (state, action) => {
+          state.certificates = action.payload;
       });
   },
 });
