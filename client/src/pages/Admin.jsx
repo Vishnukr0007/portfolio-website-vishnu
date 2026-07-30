@@ -672,6 +672,40 @@ const Admin = () => {
                                             <div className="flex gap-2">
                                                 <button onClick={() => handleEditSkill(s)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"><Edit size={16} /></button>
                                                 <button onClick={() => handleDeleteSkill(s._id)} className="p-2 text-text-secondary-light dark:text-text-secondary-dark hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'add-skill' && (
+                            <div className="max-w-xl mx-auto bg-card-light dark:bg-card-dark p-8 md:p-12 rounded-3xl border border-gray-200 dark:border-primary-dark/10 shadow-2xl">
+                                <h2 className="text-2xl md:text-3xl font-bold font-heading mb-8">{editingSkill ? 'Edit' : 'Add'} <span className="text-primary-light dark:text-primary-dark">Skill</span></h2>
+                                <form onSubmit={handleSkillSubmit(onSkillSubmit)} className="space-y-6">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Skill Name</label>
+                                        <input {...registerSkill('name')} placeholder="e.g. React" className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none" required />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark px-1">Category</label>
+                                        <select {...registerSkill('category')} className="w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl border border-gray-200 dark:border-white/5 focus:border-primary-light dark:focus:border-primary-dark transition-all outline-none">
+                                            <option value="Frontend">Frontend</option>
+                                            <option value="Backend">Backend</option>
+                                            <option value="Database">Database</option>
+                                            <option value="Database & API">Database & API</option>
+                                            <option value="Tools">Tools</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" className="w-full py-5 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all">Save Skill</button>
+                                </form>
+                            </div>
+                        )}
+
+                        {activeTab === 'manage-experience' && (
+                            <div className="space-y-6">
+                                <div className="flex justify-between items-center">
+                                    <h3 className="text-xl font-bold">Manage <span className="text-primary-light dark:text-primary-dark">Experience</span></h3>
                                     <button
                                         onClick={() => { setActiveTab('add-experience'); setEditingExp(null); resetExp(); }}
                                         className="flex items-center gap-2 px-4 py-2 bg-primary-light dark:bg-primary-dark text-white dark:text-black rounded-xl font-bold text-sm shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20 hover:-translate-y-0.5 transition-all"
