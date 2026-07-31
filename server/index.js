@@ -27,8 +27,9 @@ const allowedOrigins = [
     process.env.CLIENT_URL,
     process.env.ALLOWED_ORIGIN,
     'https://portfolio-website-vishnu-6rmv.vercel.app',
+    'https://portfolio-website-vishnu-ndnv.vercel.app',
     'http://localhost:5173',
-].filter(Boolean);
+].filter(Boolean).map(url => url.replace(/\/$/, ''));
 
 app.use(cors({
     origin: function (origin, callback) {

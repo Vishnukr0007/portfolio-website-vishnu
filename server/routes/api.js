@@ -10,6 +10,7 @@ const { getExperience, createExperience, deleteExperience, updateExperience } = 
 const { getSocials, createSocial, deleteSocial, updateSocial } = require('../controllers/socialController');
 const { getCertificates, createCertificate, updateCertificate, deleteCertificate } = require('../controllers/certificateController');
 const { getContactInfo, updateContactInfo } = require('../controllers/contactInfoController');
+const { createMessage, getMessages, markMessageRead, deleteMessage } = require('../controllers/messageController');
 const { uploadImage } = require('../controllers/uploadController');
 const auth = require('../middleware/auth');
 
@@ -43,9 +44,15 @@ router.post('/certificates', auth, createCertificate);
 router.put('/certificates/:id', auth, updateCertificate);
 router.delete('/certificates/:id', auth, deleteCertificate);
 
-// Contact Info
+// Contact Info & Submissions
 router.get('/contact-info', getContactInfo);
 router.put('/contact-info', auth, updateContactInfo);
+router.post('/contact', createMessage);
+
+// Admin Inbox Messages
+router.get('/messages', auth, getMessages);
+router.put('/messages/:id/read', auth, markMessageRead);
+router.delete('/messages/:id', auth, deleteMessage);
 
 // Resume
 const { downloadResume, getResumeStats } = require('../controllers/contactInfoController');

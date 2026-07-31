@@ -37,8 +37,12 @@ exports.deleteProject = async (req, res) => {
 
         // Delete image from Cloudinary
         if (project.image) {
-            const publicId = project.image.split('/').pop().split('.')[0];
-            await cloudinary.uploader.destroy(`portfolio/${publicId}`);
+            try {
+                const publicId = project.image.split('/').pop().split('.')[0];
+                await cloudinary.uploader.destroy(`portfolio/${publicId}`);
+            } catch (err) {
+                console.error('[Cloudinary Delete Error]:', err.message);
+            }
         }
 
         await Project.findByIdAndDelete(id);
@@ -60,8 +64,12 @@ exports.updateProject = async (req, res) => {
         if (req.body.image) {
             const oldProject = await Project.findById(id);
             if (oldProject && oldProject.image && oldProject.image !== req.body.image) {
-                 const publicId = oldProject.image.split('/').pop().split('.')[0];
-                 await cloudinary.uploader.destroy(`portfolio/${publicId}`);
+                try {
+                    const publicId = oldProject.image.split('/').pop().split('.')[0];
+                    await cloudinary.uploader.destroy(`portfolio/${publicId}`);
+                } catch (err) {
+                    console.error('[Cloudinary Update Image Error]:', err.message);
+                }
             }
         }
 

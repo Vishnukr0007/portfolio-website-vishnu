@@ -1,12 +1,50 @@
 import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
+function createParticle(canvas, colors) {
+    let x = Math.random() * canvas.width;
+    let y = Math.random() * canvas.height;
+    let size = Math.random() * 3 + 1;
+    const speedX = Math.random() * 1 - 0.5;
+    const speedY = Math.random() * 1 - 0.5;
+    let color = colors[Math.floor(Math.random() * colors.length)];
+
+    return {
+        get x() { return x; },
+        get y() { return y; },
+        get size() { return size; },
+        update(currentColors) {
+            x += speedX;
+            y += speedY;
+
+            if (size > 0.2) size -= 0.01;
+
+            if (x < 0) x = canvas.width;
+            if (x > canvas.width) x = 0;
+            if (y < 0) y = canvas.height;
+            if (y > canvas.height) y = 0;
+
+            if (size <= 0.2) {
+                size = Math.random() * 3 + 1;
+                color = currentColors[Math.floor(Math.random() * currentColors.length)];
+            }
+        },
+        draw(ctx) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    };
+}
+
 const Particles = () => {
     const canvasRef = useRef(null);
     const { darkMode } = useSelector((state) => state.theme);
 
     useEffect(() => {
         const canvas = canvasRef.current;
+        if (!canvas) return;
         const ctx = canvas.getContext('2d');
         let animationFrameId;
 
@@ -15,64 +53,26 @@ const Particles = () => {
 
         const particles = [];
         const particleCount = 60;
-        
-        // Colors from theme: 
-        // light mode: orange, dark mode: yellow/amber
+
         const getColors = () => darkMode 
             ? ['rgba(255, 191, 0, 0.4)', 'rgba(217, 119, 6, 0.3)'] 
             : ['rgba(217, 119, 6, 0.3)', 'rgba(255, 191, 0, 0.2)'];
 
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 3 + 1;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
-                this.colors = getColors();
-                this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                if (this.size > 0.2) this.size -= 0.01;
-
-                // wrap around
-                if (this.x < 0) this.x = canvas.width;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.y < 0) this.y = canvas.height;
-                if (this.y > canvas.height) this.y = 0;
-                
-                // Keep glowing/fading
-                if(this.size <= 0.2) {
-                    this.size = Math.random() * 3 + 1;
-                    this.colors = getColors();
-                    this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
-                }
-            }
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
         const init = () => {
             particles.length = 0;
+            const colors = getColors();
             for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
+                particles.push(createParticle(canvas, colors));
             }
         };
 
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const currentColors = getColors();
             for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
+                particles[i].update(currentColors);
+                particles[i].draw(ctx);
             }
-            // Add subtle connections
             for (let a = 0; a < particles.length; a++) {
                 for (let b = a; b < particles.length; b++) {
                     const dx = particles[a].x - particles[b].x;

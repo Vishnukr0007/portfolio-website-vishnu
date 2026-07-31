@@ -74,7 +74,7 @@ const GithubStats = ({ username = 'Vishnukr0007' }) => {
                             <div className="flex flex-col items-center">
                                 <div className="flex items-center gap-2 text-2xl sm:text-3xl font-bold font-heading text-slate-900 dark:text-white">
                                     <BookOpen size={20} className="text-amber-500" />
-                                    <span>{stats.publicRepos}</span>
+                                    <span>{loading ? '...' : stats.publicRepos}</span>
                                 </div>
                                 <span className="text-xs text-slate-500 font-medium mt-1">Repositories</span>
                             </div>
@@ -82,7 +82,7 @@ const GithubStats = ({ username = 'Vishnukr0007' }) => {
                             <div className="flex flex-col items-center">
                                 <div className="flex items-center gap-2 text-2xl sm:text-3xl font-bold font-heading text-slate-900 dark:text-white">
                                     <Star size={20} className="text-amber-400" />
-                                    <span>{stats.totalStars}</span>
+                                    <span>{loading ? '...' : stats.totalStars}</span>
                                 </div>
                                 <span className="text-xs text-slate-500 font-medium mt-1">Stars Earned</span>
                             </div>
@@ -90,7 +90,7 @@ const GithubStats = ({ username = 'Vishnukr0007' }) => {
                             <div className="flex flex-col items-center">
                                 <div className="flex items-center gap-2 text-2xl sm:text-3xl font-bold font-heading text-slate-900 dark:text-white">
                                     <Users size={20} className="text-emerald-400" />
-                                    <span>{stats.followers}</span>
+                                    <span>{loading ? '...' : stats.followers}</span>
                                 </div>
                                 <span className="text-xs text-slate-500 font-medium mt-1">Followers</span>
                             </div>

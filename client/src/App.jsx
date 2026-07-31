@@ -7,7 +7,6 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
-import { setTheme } from './redux/slices/themeSlice';
 import { fetchSocials, fetchContactInfo, fetchCertificates } from './redux/slices/portfolioSlice';
 
 function App() {

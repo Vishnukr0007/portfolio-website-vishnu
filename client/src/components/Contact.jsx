@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { Mail, Phone, Github, Linkedin, Twitter, Share2, Send, Download, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
+import api from '../services/api';
 import GlowCard from './ui/GlowCard';
 import BotanicalDivider from './ui/BotanicalDivider';
 
@@ -17,7 +18,7 @@ const Contact = () => {
         return <Share2 size={18} />;
     };
 
-    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+    const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
     const [submitting, setSubmitting] = useState(false);
 
     const handleChange = (e) => {
@@ -27,17 +28,18 @@ const Contact = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.name || !formData.email || !formData.message) {
-            toast.error('Please fill in all fields');
+            toast.error('Please fill in all required fields (Name, Email, Message).');
             return;
         }
 
         setSubmitting(true);
         try {
-            await new Promise((resolve) => setTimeout(resolve, 1200));
-            toast.success('Message sent successfully! I will get back to you shortly.');
-            setFormData({ name: '', email: '', message: '' });
+            const res = await api.post('/contact', formData);
+            toast.success(res.data?.message || 'Message sent! A confirmation email has been dispatched.');
+            setFormData({ name: '', email: '', subject: '', message: '' });
         } catch (error) {
-            toast.error('Failed to send message. Please try again or email directly.');
+            const errorMsg = error.response?.data?.message || 'Failed to send message. Please try again or email directly.';
+            toast.error(errorMsg);
         } finally {
             setSubmitting(false);
         }
@@ -76,7 +78,7 @@ const Contact = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-start">
-                    {/* Direct Contact Cards */}
+                    {/* Direct Contact Info */}
                     <div className="md:col-span-2 space-y-4">
                         <GlowCard glowColor="gold" className="p-6">
                             <h3 className="text-base font-bold font-heading text-slate-900 dark:text-white mb-4">
@@ -143,42 +145,61 @@ const Contact = () => {
                     <div className="md:col-span-3">
                         <GlowCard glowColor="gold" className="p-6 sm:p-8">
                             <form onSubmit={handleSubmit} className="space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                                            Your Name *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            required
+                                            className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#060913] border border-slate-200 dark:border-white/10 text-xs sm:text-sm text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-all"
+                                            placeholder="Rahul Sharma"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                                            Your Email *
+                                        </label>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            required
+                                            className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#060913] border border-slate-200 dark:border-white/10 text-xs sm:text-sm text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-all"
+                                            placeholder="rahul@example.com"
+                                        />
+                                    </div>
+                                </div>
+
                                 <div>
                                     <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                        Your Name
+                                        Subject / Topic
                                     </label>
                                     <input
                                         type="text"
-                                        name="name"
-                                        value={formData.name}
+                                        name="subject"
+                                        value={formData.subject}
                                         onChange={handleChange}
                                         className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#060913] border border-slate-200 dark:border-white/10 text-xs sm:text-sm text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-all"
-                                        placeholder="Full name"
+                                        placeholder="e.g. Full-Stack Developer Role / Project Discussion"
                                     />
                                 </div>
 
                                 <div>
                                     <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                        Your Email
-                                    </label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#060913] border border-slate-200 dark:border-white/10 text-xs sm:text-sm text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-all"
-                                        placeholder="email@example.com"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                                        Message
+                                        Message *
                                     </label>
                                     <textarea
                                         name="message"
                                         value={formData.message}
                                         onChange={handleChange}
+                                        required
                                         rows="4"
                                         className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#060913] border border-slate-200 dark:border-white/10 text-xs sm:text-sm text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-all resize-none"
                                         placeholder="Tell me about your project, team opportunity, or inquiry..."

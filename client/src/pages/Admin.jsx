@@ -6,19 +6,24 @@ import api from '../services/api';
 import toast from 'react-hot-toast';
 import { logout } from '../redux/slices/authSlice';
 import { fetchProjects, fetchSkills, fetchExperience, fetchSocials, fetchContactInfo, fetchCertificates } from '../redux/slices/portfolioSlice';
-import { Trash2, Edit, Plus, Briefcase, Award, Zap, LogOut, Share2, Settings, FileText, Download, BadgeCheck } from 'lucide-react';
+import { Trash2, Edit, Plus, Briefcase, Award, Zap, LogOut, Share2, Settings, FileText, Download, BadgeCheck, Inbox, Mail, RefreshCw, CheckCircle2 } from 'lucide-react';
 import Swal from 'sweetalert2';
 
 const Admin = () => {
-    const { isAdmin, adminToken } = useSelector((state) => state.auth);
+    const { isAdmin } = useSelector((state) => state.auth);
     const { projects, skills, experience, socials, contactInfo, certificates } = useSelector((state) => state.portfolio);
     const dispatch = useDispatch();
-    const [activeTab, setActiveTab] = useState('projects');
+    const [activeTab, setActiveTab] = useState('messages');
     const [editingProject, setEditingProject] = useState(null);
     const [editingSkill, setEditingSkill] = useState(null);
     const [editingExp, setEditingExp] = useState(null);
     const [editingSocial, setEditingSocial] = useState(null);
     const [editingCertificate, setEditingCertificate] = useState(null);
+
+    // Messages Inbox state
+    const [messages, setMessages] = useState([]);
+    const [messagesLoading, setMessagesLoading] = useState(false);
+    const [selectedMessage, setSelectedMessage] = useState(null);
 
     // Auth now handled by api service automatically
 
@@ -30,6 +35,51 @@ const Admin = () => {
     const { register: registerContact, handleSubmit: handleContactSubmit, setValue: setContactValue } = useForm();
     const { register: registerCertificate, handleSubmit: handleCertificateSubmit, reset: resetCertificate, setValue: setCertificateValue } = useForm();
 
+    const fetchMessages = async () => {
+        setMessagesLoading(true);
+        try {
+            const res = await api.get('/messages');
+            setMessages(res.data || []);
+        } catch (error) {
+            console.error('Failed to load inbox messages', error);
+        } finally {
+            setMessagesLoading(false);
+        }
+    };
+
+    const handleMarkRead = async (id) => {
+        try {
+            await api.put(`/messages/${id}/read`);
+            setMessages((prev) => prev.map((m) => (m._id === id ? { ...m, read: true } : m)));
+        } catch {
+            toast.error('Failed to update message status');
+        }
+    };
+
+    const handleDeleteMessage = async (id) => {
+        const result = await Swal.fire({
+            title: 'Delete Message?',
+            text: 'This inquiry will be removed from your database.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            confirmButtonText: 'Yes, delete',
+            background: document.documentElement.classList.contains('dark') ? '#1e1e20' : '#fff',
+            color: document.documentElement.classList.contains('dark') ? '#fff' : '#000'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await api.delete(`/messages/${id}`);
+                setMessages((prev) => prev.filter((m) => m._id !== id));
+                if (selectedMessage?._id === id) setSelectedMessage(null);
+                toast.success('Message deleted!');
+            } catch {
+                toast.error('Failed to delete message');
+            }
+        }
+    };
+
     useEffect(() => {
         dispatch(fetchProjects());
         dispatch(fetchSkills());
@@ -37,6 +87,7 @@ const Admin = () => {
         dispatch(fetchSocials());
         dispatch(fetchContactInfo());
         dispatch(fetchCertificates());
+        fetchMessages();
     }, [dispatch]);
 
     useEffect(() => {
@@ -111,7 +162,7 @@ const Admin = () => {
                 await api.delete(`/projects/${id}`);
                 Swal.fire('Deleted!', 'Your project has been deleted.', 'success');
                 dispatch(fetchProjects());
-            } catch (error) { toast.error('Failed or Unauthorized'); }
+            } catch { toast.error('Failed or Unauthorized'); }
         }
     };
 
@@ -140,7 +191,7 @@ const Admin = () => {
             setEditingSkill(null);
             dispatch(fetchSkills());
             setActiveTab('manage-skills');
-        } catch (error) { toast.error('Unauthorized or Failed'); }
+        } catch { toast.error('Unauthorized or Failed'); }
     };
 
     const handleDeleteSkill = async (id) => {
@@ -161,7 +212,7 @@ const Admin = () => {
                 await api.delete(`/skills/${id}`);
                 Swal.fire('Deleted!', 'Skill removed.', 'success');
                 dispatch(fetchSkills());
-            } catch (error) { toast.error('Unauthorized or Failed'); }
+            } catch { toast.error('Unauthorized or Failed'); }
         }
     };
 
@@ -190,7 +241,7 @@ const Admin = () => {
             setEditingExp(null);
             dispatch(fetchExperience());
             setActiveTab('manage-experience');
-        } catch (error) { toast.error('Unauthorized or Failed'); }
+        } catch { toast.error('Unauthorized or Failed'); }
     };
 
     const handleDeleteExp = async (id) => {
@@ -211,7 +262,7 @@ const Admin = () => {
                 await api.delete(`/experience/${id}`);
                 Swal.fire('Deleted!', 'Experience removed.', 'success');
                 dispatch(fetchExperience());
-            } catch (error) { toast.error('Unauthorized or Failed'); }
+            } catch { toast.error('Unauthorized or Failed'); }
         }
     };
 
@@ -239,7 +290,7 @@ const Admin = () => {
             setEditingSocial(null);
             dispatch(fetchSocials());
             setActiveTab('manage-socials');
-        } catch (error) { toast.error('Unauthorized or Failed'); }
+        } catch { toast.error('Unauthorized or Failed'); }
     };
 
     const handleDeleteSocial = async (id) => {
@@ -260,7 +311,7 @@ const Admin = () => {
                 await api.delete(`/socials/${id}`);
                 Swal.fire('Deleted!', 'Social link removed.', 'success');
                 dispatch(fetchSocials());
-            } catch (error) { toast.error('Unauthorized or Failed'); }
+            } catch { toast.error('Unauthorized or Failed'); }
         }
     };
 
@@ -370,7 +421,7 @@ const Admin = () => {
             await api.put(`/contact-info`, finalData);
             toast.success('Settings updated successfully!', { id: toastId });
             dispatch(fetchContactInfo());
-        } catch (error) {
+        } catch {
             toast.error('Failed to update settings', { id: toastId });
         }
     };
@@ -386,6 +437,20 @@ const Admin = () => {
 
                             <div className="space-y-4">
                                 <div className="space-y-1">
+                                    <button
+                                        onClick={() => setActiveTab('messages')}
+                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 ${activeTab === 'messages' ? 'bg-amber-500 text-slate-950 font-bold shadow-lg shadow-amber-500/20' : 'hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark'}`}
+                                    >
+                                        <div className="flex items-center gap-3"><Inbox size={20} /> <span className="text-sm font-semibold">Messages Inbox</span></div>
+                                        {messages.filter(m => !m.read).length > 0 ? (
+                                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500 text-white animate-pulse">
+                                                {messages.filter(m => !m.read).length} unread
+                                            </span>
+                                        ) : (
+                                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/10">{messages.length}</span>
+                                        )}
+                                    </button>
+
                                     <button
                                         onClick={() => setActiveTab('projects')}
                                         className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 ${activeTab === 'projects' || activeTab === 'add-project' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black shadow-lg shadow-primary-light/20 dark:shadow-primary-dark/20' : 'hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark'}`}
@@ -457,6 +522,12 @@ const Admin = () => {
 
                 {/* Mobile Bottom Navigation */}
                 <nav className="md:hidden fixed bottom-6 left-6 right-6 bg-card-light/90 dark:bg-card-dark/90 backdrop-blur-xl border border-gray-200 dark:border-primary-dark/10 rounded-2xl px-4 py-2 flex items-center justify-between shadow-2xl z-50">
+                    <button onClick={() => setActiveTab('messages')} className={`p-2.5 rounded-xl transition-all relative ${activeTab === 'messages' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}>
+                        <Inbox size={20} />
+                        {messages.filter(m => !m.read).length > 0 && (
+                            <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-950 animate-ping" />
+                        )}
+                    </button>
                     <button onClick={() => setActiveTab('projects')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'projects' || activeTab === 'add-project' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Briefcase size={20} /></button>
                     <button onClick={() => setActiveTab('manage-skills')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-skills' || activeTab === 'add-skill' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Zap size={20} /></button>
                     <button onClick={() => setActiveTab('manage-experience')} className={`p-2.5 rounded-xl transition-all ${activeTab === 'manage-experience' || activeTab === 'add-experience' ? 'bg-primary-light dark:bg-primary-dark text-white dark:text-black' : 'text-text-secondary-light dark:text-text-secondary-dark'}`}><Award size={20} /></button>
@@ -470,7 +541,7 @@ const Admin = () => {
 
                 <main className="flex-1 p-4 md:p-8 overflow-y-auto pb-32 md:pb-8">
                     <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
-                        {/* Mobile Header Tabs (Switch between Manage & Add) */}
+                        {/* Mobile Header Tabs */}
                         <div className="md:hidden flex bg-gray-100 dark:bg-white/5 p-1 rounded-xl mb-6">
                             <button
                                 onClick={() => setActiveTab(activeTab.startsWith('add') ? activeTab.replace('add-', '').replace('project', 'projects').replace('skill', 'manage-skills').replace('experience', 'manage-experience').replace('certificate', 'manage-certificates').replace('social', 'manage-socials') : activeTab)}
@@ -485,6 +556,149 @@ const Admin = () => {
                                 Add New
                             </button>
                         </div>
+
+                        {/* MESSAGES INBOX TAB */}
+                        {activeTab === 'messages' && (
+                            <div className="space-y-6">
+                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-gray-200 dark:border-white/10">
+                                    <div>
+                                        <h3 className="text-2xl font-bold font-heading flex items-center gap-2">
+                                            Contact <span className="text-amber-500">Inbox</span>
+                                        </h3>
+                                        <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">
+                                            Manage inquiries, recruiter messages, and lead submissions stored in MongoDB.
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={fetchMessages}
+                                        className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gray-100 dark:bg-white/10 text-xs font-semibold hover:bg-amber-500 hover:text-slate-950 transition-all"
+                                    >
+                                        <RefreshCw size={14} className={messagesLoading ? 'animate-spin' : ''} /> Refresh Inbox
+                                    </button>
+                                </div>
+
+                                {messagesLoading && messages.length === 0 ? (
+                                    <div className="text-center py-16">
+                                        <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                                        <p className="text-xs text-gray-500">Loading inbox messages...</p>
+                                    </div>
+                                ) : messages.length === 0 ? (
+                                    <div className="text-center py-20 bg-card-light dark:bg-card-dark rounded-3xl border border-gray-200 dark:border-white/10">
+                                        <Inbox size={48} className="mx-auto text-amber-500/50 mb-3" />
+                                        <h4 className="text-lg font-bold">No Messages Yet</h4>
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Inquiries submitted via your website contact form will appear here.
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                        {/* Message List */}
+                                        <div className="lg:col-span-1 space-y-3 max-h-[600px] overflow-y-auto pr-1">
+                                            {messages.map((msg) => (
+                                                <div
+                                                    key={msg._id}
+                                                    onClick={() => {
+                                                        setSelectedMessage(msg);
+                                                        if (!msg.read) handleMarkRead(msg._id);
+                                                    }}
+                                                    className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+                                                        selectedMessage?._id === msg._id
+                                                            ? 'border-amber-500 bg-amber-500/10 shadow-md'
+                                                            : msg.read
+                                                            ? 'border-gray-200 dark:border-white/10 bg-card-light dark:bg-card-dark opacity-80'
+                                                            : 'border-emerald-500/50 bg-emerald-500/5 font-semibold'
+                                                    }`}
+                                                >
+                                                    <div className="flex items-center justify-between mb-1.5">
+                                                        <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                                                            {msg.name}
+                                                        </span>
+                                                        {!msg.read && (
+                                                            <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0" />
+                                                        )}
+                                                    </div>
+                                                    <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium truncate mb-1">
+                                                        {msg.subject || 'Portfolio Contact Inquiry'}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 leading-tight">
+                                                        {msg.message}
+                                                    </p>
+                                                    <span className="text-[10px] text-gray-400 block mt-2">
+                                                        {new Date(msg.createdAt).toLocaleString()}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {/* Selected Message Detail View */}
+                                        <div className="lg:col-span-2">
+                                            {selectedMessage ? (
+                                                <div className="p-6 md:p-8 rounded-3xl bg-card-light dark:bg-card-dark border border-gray-200 dark:border-white/10 shadow-xl space-y-6">
+                                                    <div className="flex items-start justify-between gap-4 pb-4 border-b border-gray-100 dark:border-white/10">
+                                                        <div>
+                                                            <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                                                                {selectedMessage.read ? 'Read Message' : 'New Message'}
+                                                            </span>
+                                                            <h4 className="text-xl font-bold font-heading text-slate-900 dark:text-white mt-2">
+                                                                {selectedMessage.subject || 'Portfolio Inquiry'}
+                                                            </h4>
+                                                        </div>
+
+                                                        <button
+                                                            onClick={() => handleDeleteMessage(selectedMessage._id)}
+                                                            className="p-2.5 text-red-500 hover:bg-red-500/10 rounded-xl transition-colors shrink-0"
+                                                            title="Delete Message"
+                                                        >
+                                                            <Trash2 size={18} />
+                                                        </button>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                                                        <div className="p-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
+                                                            <span className="text-gray-400 block mb-0.5">Sender Name</span>
+                                                            <span className="font-bold text-slate-900 dark:text-white">{selectedMessage.name}</span>
+                                                        </div>
+
+                                                        <div className="p-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5">
+                                                            <span className="text-gray-400 block mb-0.5">Email Address</span>
+                                                            <a href={`mailto:${selectedMessage.email}`} className="font-bold text-amber-500 hover:underline truncate block">
+                                                                {selectedMessage.email}
+                                                            </a>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="p-5 rounded-2xl bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-white/10">
+                                                        <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block mb-2">
+                                                            Message Body
+                                                        </span>
+                                                        <p className="text-sm text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-wrap">
+                                                            {selectedMessage.message}
+                                                        </p>
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between text-xs pt-2">
+                                                        <span className="text-gray-400">Received: {new Date(selectedMessage.createdAt).toLocaleString()}</span>
+                                                        <a
+                                                            href={`mailto:${selectedMessage.email}?subject=Re: ${encodeURIComponent(selectedMessage.subject || 'Portfolio Inquiry')}`}
+                                                            target="_blank"
+                                                            rel="noreferrer"
+                                                            className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold flex items-center gap-2 transition-all"
+                                                        >
+                                                            <Mail size={14} /> Reply via Email
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="h-full min-h-[300px] flex flex-col items-center justify-center p-8 rounded-3xl bg-card-light dark:bg-card-dark border border-dashed border-gray-200 dark:border-white/10 text-center">
+                                                    <Inbox size={40} className="text-gray-400 mb-2" />
+                                                    <p className="text-xs text-gray-500">Select a message from the list on the left to read full details.</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
                         {activeTab === 'projects' && (
                             <div className="space-y-6">
