@@ -1,7 +1,14 @@
 import axios from 'axios';
 
-const rawBaseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
-const baseURL = rawBaseURL.endsWith('/api') ? rawBaseURL : `${rawBaseURL}/api`;
+const getBaseURL = () => {
+    if (import.meta.env.DEV && !import.meta.env.VITE_USE_REMOTE_API) {
+        return 'http://localhost:5000/api';
+    }
+    const raw = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+    return raw.endsWith('/api') ? raw : `${raw}/api`;
+};
+
+const baseURL = getBaseURL();
 
 console.log('API Base URL:', baseURL);
 

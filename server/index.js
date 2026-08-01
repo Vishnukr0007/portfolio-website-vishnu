@@ -26,20 +26,30 @@ app.use(helmet({
 const allowedOrigins = [
     process.env.CLIENT_URL,
     process.env.ALLOWED_ORIGIN,
+    'https://portfolio-website-vishnu.vercel.app',
     'https://portfolio-website-vishnu-6rmv.vercel.app',
     'https://portfolio-website-vishnu-ndnv.vercel.app',
     'http://localhost:5173',
+    'http://localhost:3000',
+    'http://localhost:5000',
 ].filter(Boolean).map(url => url.replace(/\/$/, ''));
 
 app.use(cors({
     origin: function (origin, callback) {
         // allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
+
+        const cleanOrigin = origin.replace(/\/$/, '');
+        const isAllowed = allowedOrigins.includes(cleanOrigin) ||
+                          /\.vercel\.app$/.test(cleanOrigin) ||
+                          /^http:\/\/localhost:\d+$/.test(cleanOrigin);
+
+        if (isAllowed) {
+            return callback(null, true);
+        } else {
+            console.warn(`[CORS Blocked]: Origin ${origin} not in allowed origins`);
+            return callback(null, false);
         }
-        return callback(null, true);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
