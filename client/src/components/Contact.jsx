@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useSelector, useDispatch } from 'react-redux';
 import { Mail, Phone, Github, Linkedin, Twitter, Share2, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
+import api from '../services/api';
 
 const Contact = () => {
     const { socials, contactInfo } = useSelector((state) => state.portfolio);
@@ -31,13 +32,13 @@ const Contact = () => {
         }
         
         setSubmitting(true);
-        // Simulate API call
         try {
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-            toast.success('Message sent successfully! I will get back to you soon.');
+            const res = await api.post('/contact', formData);
+            toast.success(res.data?.message || 'Message sent successfully! I will get back to you soon.');
             setFormData({ name: '', email: '', message: '' });
         } catch (error) {
-            toast.error('Failed to send message. Please try again or use direct email.');
+            const errorMsg = error.response?.data?.message || 'Failed to send message. Please try again or use direct email.';
+            toast.error(errorMsg);
         } finally {
             setSubmitting(false);
         }
