@@ -18,7 +18,7 @@ app.use(helmet({
             "script-src": ["'self'", "'unsafe-inline'"],
             "style-src": ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
             "font-src": ["'self'", "fonts.gstatic.com"],
-            "img-src": ["'self'", "data:", "res.cloudinary.com"],
+            "img-src": ["'self'", "data:", "blob:", "res.cloudinary.com", "*.cloudinary.com", "https:", "http:"],
         },
     },
 }));
@@ -58,7 +58,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
 
 // Logging Middleware for debugging
 app.use((req, res, next) => {
@@ -72,16 +71,30 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-// Database Connection
+// Database Connection with serverless connection pooling/caching
+let isConnected = false;
 const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`Database Connection Error: ${error.message}`);
-    process.exit(1);
-  }
+    if (isConnected || mongoose.connection.readyState >= 1) {
+        return;
+    }
+    try {
+        const conn = await mongoose.connect(process.env.MONGODB_URI);
+        isConnected = conn.connections[0].readyState >= 1;
+        console.log(`MongoDB Connected: ${conn.connection.host}`);
+    } catch (error) {
+        console.error(`Database Connection Error: ${error.message}`);
+    }
 };
+
+// Database connection middleware to ensure DB is connected prior to processing API routes
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+    } catch (err) {
+        console.error('DB connection middleware error:', err.message);
+    }
+    next();
+});
 
 // Routes
 app.use('/api', require('./routes/api'));
@@ -106,10 +119,6 @@ if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
             console.log(`Server running on port ${PORT}`);
         });
     });
-} else {
-    // In production (like Vercel), we connect to DB but don't call listen
-    // Vercel handles the execution of the app
-    connectDB();
 }
 
 module.exports = app;
