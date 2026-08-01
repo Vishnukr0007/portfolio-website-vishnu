@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProjects, fetchSkills, fetchExperience } from '../redux/slices/portfolioSlice';
+import { fetchProjects, fetchSkills, fetchExperience, fetchCertificates, fetchSocials, fetchContactInfo } from '../redux/slices/portfolioSlice';
 import Hero from '../components/Hero';
 import Skills from '../components/Skills';
 import Certifications from '../components/Certifications';
@@ -18,18 +18,21 @@ const Home = () => {
         dispatch(fetchProjects());
         dispatch(fetchSkills());
         dispatch(fetchExperience());
+        dispatch(fetchCertificates());
+        dispatch(fetchSocials());
+        dispatch(fetchContactInfo());
     }, [dispatch]);
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center dark:text-white">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-[#060913] text-slate-900 dark:text-white">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
             </div>
         );
     }
 
     return (
-        <div className="relative isolate overflow-hidden dark:bg-[#070b18] transition-colors duration-300">
+        <div className="relative isolate overflow-hidden bg-slate-50 dark:bg-[#060913] transition-colors duration-500 min-h-screen">
             <CosmicBackground />
             <Hero />
             <Skills />

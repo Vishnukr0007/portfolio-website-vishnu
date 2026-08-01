@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useSelector, useDispatch } from 'react-redux';
-import { Mail, Phone, Github, Linkedin, Twitter, Share2, Send } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { Mail, Phone, Github, Linkedin, Twitter, Share2, Send, Download, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../services/api';
+import GlowCard from './ui/GlowCard';
+import BotanicalDivider from './ui/BotanicalDivider';
 
 const Contact = () => {
     const { socials, contactInfo } = useSelector((state) => state.portfolio);
-    const dispatch = useDispatch();
 
     const getIcon = (platform) => {
         const p = platform.toLowerCase();
-        if (p.includes('github')) return <Github size={24} />;
-        if (p.includes('linkedin')) return <Linkedin size={24} />;
-        if (p.includes('twitter') || p.includes('x')) return <Twitter size={24} />;
-        return <Share2 size={24} />;
+        if (p.includes('github')) return <Github size={18} />;
+        if (p.includes('linkedin')) return <Linkedin size={18} />;
+        if (p.includes('twitter') || p.includes('x')) return <Twitter size={18} />;
+        return <Share2 size={18} />;
     };
 
-    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+    const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
     const [submitting, setSubmitting] = useState(false);
 
     const handleChange = (e) => {
@@ -27,135 +28,201 @@ const Contact = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.name || !formData.email || !formData.message) {
-            toast.error('Please fill in all fields');
+            toast.error('Please fill in all required fields (Name, Email, Message).');
             return;
         }
-        
+
         setSubmitting(true);
         try {
             const res = await api.post('/contact', formData);
-            toast.success(res.data?.message || 'Message sent successfully! I will get back to you soon.');
-            setFormData({ name: '', email: '', message: '' });
+            toast.success(res.data?.message || 'Message sent! A confirmation email has been dispatched.');
+            setFormData({ name: '', email: '', subject: '', message: '' });
         } catch (error) {
-            const errorMsg = error.response?.data?.message || 'Failed to send message. Please try again or use direct email.';
+            const errorMsg = error.response?.data?.message || 'Failed to send message. Please try again or email directly.';
             toast.error(errorMsg);
         } finally {
             setSubmitting(false);
         }
     };
 
+    const email = contactInfo?.email || 'vishnukrishnankutty54@gmail.com';
+    const phone = contactInfo?.phone || '+91 6282899456';
+    const resumeUrl = contactInfo?.resumeUrl || '#';
+
     return (
-        <section id="contact" className="py-24 bg-gray-50 dark:bg-black/20">
-            <div className="container mx-auto px-6 text-center max-w-2xl">
-                <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-4xl font-bold font-heading mb-6 text-text-primary-light dark:text-text-primary-dark"
-                >
-                    Let's <span className="text-primary-light dark:text-primary-dark">Connect</span>
-                </motion.h2>
+        <section id="contact" className="py-20 relative">
+            <BotanicalDivider />
 
-                <p className="text-lg text-text-secondary-light dark:text-text-secondary-dark mb-12">
-                    I'm currently available for freelance work and full-time opportunities. Feel free to reach out!
-                </p>
-
-                {contactInfo && (
-                    <div className="flex flex-col sm:flex-row justify-center gap-6 mb-12">
-                        <a href={`tel:${contactInfo.phone.replace(/[^0-9+]/g, '')}`} className="flex items-center justify-center gap-3 text-text-primary-light dark:text-text-primary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors">
-                            <Phone size={20} /> {contactInfo.phone}
-                        </a>
-                        <a href={`mailto:${contactInfo.email}`} className="flex items-center justify-center gap-3 text-text-primary-light dark:text-text-primary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors">
-                            <Mail size={20} /> {contactInfo.email}
-                        </a>
-                    </div>
-                )}
-
-                <motion.form 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    onSubmit={handleSubmit}
-                    className="max-w-xl mx-auto bg-white/50 dark:bg-card-dark p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-white/5 backdrop-blur-sm"
-                >
-                    <div className="mb-6 text-left">
-                        <label className="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">Name</label>
-                        <input 
-                            type="text" 
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-lg bg-white dark:bg-dark border border-gray-200 dark:border-white/10 focus:border-primary-light dark:focus:border-primary-dark focus:ring-1 focus:ring-primary-light dark:focus:ring-primary-dark outline-none transition-all dark:text-white"
-                            placeholder="Your full name"
-                        />
-                    </div>
-                    <div className="mb-6 text-left">
-                        <label className="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">Email</label>
-                        <input 
-                            type="email" 
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-lg bg-white dark:bg-dark border border-gray-200 dark:border-white/10 focus:border-primary-light dark:focus:border-primary-dark focus:ring-1 focus:ring-primary-light dark:focus:ring-primary-dark outline-none transition-all dark:text-white"
-                            placeholder="your.name@company.com"
-                        />
-                    </div>
-                    <div className="mb-8 text-left">
-                        <label className="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">Message</label>
-                        <textarea 
-                            name="message"
-                            value={formData.message}
-                            onChange={handleChange}
-                            rows="4"
-                            className="w-full px-4 py-3 rounded-lg bg-white dark:bg-dark border border-gray-200 dark:border-white/10 focus:border-primary-light dark:focus:border-primary-dark focus:ring-1 focus:ring-primary-light dark:focus:ring-primary-dark outline-none transition-all dark:text-white resize-none"
-                            placeholder="Tell me about your project, role, or collaboration idea..."
-                        ></textarea>
-                    </div>
-                    
-                    <button 
-                        type="submit" 
-                        disabled={submitting}
-                        className="w-full py-4 rounded-xl bg-primary-light dark:bg-primary-dark text-white dark:text-black font-bold shadow-lg shadow-primary-light/30 dark:shadow-primary-dark/20 hover:-translate-y-1 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:translate-y-0"
+            <div className="container mx-auto px-6 max-w-4xl">
+                <div className="text-center max-w-2xl mx-auto mb-14">
+                    <motion.div
+                        initial={{ opacity: 0, y: 15 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-500 text-xs font-semibold mb-3"
                     >
-                        {submitting ? (
-                            <div className="w-6 h-6 border-2 border-white/30 dark:border-black/30 border-t-white dark:border-t-black rounded-full animate-spin"></div>
-                        ) : (
-                            <>Send Message <Send size={18} /></>
-                        )}
-                    </button>
-                    
-                    <div className="mt-4 text-center text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                        Or <a href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contactInfo?.email || 'vishnukrishnankutty54@gmail.com'}`} target="_blank" rel="noreferrer" className="underline hover:text-primary-light dark:hover:text-primary-dark transition-colors">send via Gmail directly</a>
-                    </div>
-                </motion.form>
+                        <Sparkles size={14} /> Direct Communication
+                    </motion.div>
 
-                {socials.length > 0 && (
-                    <div className="flex flex-col items-center gap-8 mt-16">
-                        <div className="flex justify-center gap-6">
-                            {socials.map((social) => (
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-3xl sm:text-4xl font-bold font-heading text-slate-900 dark:text-white"
+                    >
+                        Let’s Build Something Meaningful
+                    </motion.h2>
+                    <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-2">
+                        I am currently open to Software Engineer and Full-Stack Developer positions. Let's start a conversation!
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-start">
+                    {/* Direct Contact Info */}
+                    <div className="md:col-span-2 space-y-4">
+                        <GlowCard glowColor="gold" className="p-6">
+                            <h3 className="text-base font-bold font-heading text-slate-900 dark:text-white mb-4">
+                                Quick Reach
+                            </h3>
+                            <div className="space-y-4 text-xs">
                                 <a
-                                    key={social._id}
-                                    href={social.url}
+                                    href={`mailto:${email}`}
+                                    className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:border-amber-500/50 hover:text-amber-500 transition-all truncate"
+                                >
+                                    <Mail size={16} className="text-amber-500 shrink-0" />
+                                    <span className="truncate">{email}</span>
+                                </a>
+
+                                <a
+                                    href={`tel:${phone.replace(/[^0-9+]/g, '')}`}
+                                    className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 hover:border-emerald-500/50 hover:text-emerald-500 transition-all"
+                                >
+                                    <Phone size={16} className="text-emerald-500 shrink-0" />
+                                    <span>{phone}</span>
+                                </a>
+
+                                <a
+                                    href={resumeUrl}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-colors"
-                                    title={social.platform}
+                                    className="flex items-center gap-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 font-semibold hover:bg-amber-500 hover:text-slate-950 transition-all"
                                 >
-                                    {getIcon(social.platform)}
+                                    <Download size={16} className="shrink-0" />
+                                    <span>Download Resume (PDF)</span>
                                 </a>
-                            ))}
-                        </div>
+                            </div>
+                        </GlowCard>
 
-                        <a
-                            href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/resume/download`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-light dark:hover:text-primary-dark transition-all flex items-center gap-2 underline underline-offset-4 decoration-primary-light/30 dark:decoration-primary-dark/30"
-                        >
-                            Download My Resume (PDF)
-                        </a>
+                        {/* Social Profiles */}
+                        <GlowCard glowColor="emerald" className="p-6">
+                            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
+                                Professional Profiles
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                                {(socials && socials.length > 0
+                                    ? socials
+                                    : [
+                                          { _id: 's1', platform: 'GitHub', url: 'https://github.com/Vishnukr0007' },
+                                          { _id: 's2', platform: 'LinkedIn', url: 'https://linkedin.com' }
+                                      ]
+                                ).map((social) => (
+                                    <a
+                                        key={social._id}
+                                        href={social.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-100 dark:bg-white/5 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-emerald-500/10 hover:text-emerald-400 border border-slate-200 dark:border-white/10 transition-colors"
+                                    >
+                                        {getIcon(social.platform)}
+                                        <span>{social.platform}</span>
+                                    </a>
+                                ))}
+                            </div>
+                        </GlowCard>
                     </div>
-                )}
+
+                    {/* Contact Form */}
+                    <div className="md:col-span-3">
+                        <GlowCard glowColor="gold" className="p-6 sm:p-8">
+                            <form onSubmit={handleSubmit} className="space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                                            Your Name *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            required
+                                            className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#060913] border border-slate-200 dark:border-white/10 text-xs sm:text-sm text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-all"
+                                            placeholder="Rahul Sharma"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                                            Your Email *
+                                        </label>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            required
+                                            className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#060913] border border-slate-200 dark:border-white/10 text-xs sm:text-sm text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-all"
+                                            placeholder="rahul@example.com"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                                        Subject / Topic
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="subject"
+                                        value={formData.subject}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#060913] border border-slate-200 dark:border-white/10 text-xs sm:text-sm text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-all"
+                                        placeholder="e.g. Full-Stack Developer Role / Project Discussion"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                                        Message *
+                                    </label>
+                                    <textarea
+                                        name="message"
+                                        value={formData.message}
+                                        onChange={handleChange}
+                                        required
+                                        rows="4"
+                                        className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#060913] border border-slate-200 dark:border-white/10 text-xs sm:text-sm text-slate-900 dark:text-white focus:border-amber-500 outline-none transition-all resize-none"
+                                        placeholder="Tell me about your project, team opportunity, or inquiry..."
+                                    />
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={submitting}
+                                    className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md shadow-amber-500/20 disabled:opacity-50"
+                                >
+                                    {submitting ? (
+                                        <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                                    ) : (
+                                        <>
+                                            Send Message <Send size={15} />
+                                        </>
+                                    )}
+                                </button>
+                            </form>
+                        </GlowCard>
+                    </div>
+                </div>
             </div>
         </section>
     );
