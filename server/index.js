@@ -26,6 +26,7 @@ app.use(helmet({
 const allowedOrigins = [
     process.env.CLIENT_URL,
     process.env.ALLOWED_ORIGIN,
+    'https://portfolio-website-vishnu-ck8b.vercel.app',
     'https://portfolio-website-vishnu.vercel.app',
     'https://portfolio-website-vishnu-6rmv.vercel.app',
     'https://portfolio-website-vishnu-ndnv.vercel.app',
@@ -34,7 +35,7 @@ const allowedOrigins = [
     'http://localhost:5000',
 ].filter(Boolean).map(url => url.replace(/\/$/, ''));
 
-app.use(cors({
+const corsOptions = {
     origin: function (origin, callback) {
         // allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
@@ -54,7 +55,10 @@ app.use(cors({
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-key']
-}));
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // Logging Middleware for debugging
 app.use((req, res, next) => {
