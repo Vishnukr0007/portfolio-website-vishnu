@@ -10,20 +10,13 @@ const Certifications = () => {
 
     const defaultCertificates = [
         {
-            _id: 'default-1',
-            title: 'MERN Stack Web Development',
-            issuer: 'Professional Training Institute',
-            issueDate: '2024',
-            description: 'Comprehensive hands-on training in MongoDB, Express.js, React.js, Node.js, REST API development, and deployment.',
-            credentialUrl: '#',
-        },
-        {
-            _id: 'default-2',
-            title: 'Full-Stack JavaScript & React Development',
-            issuer: 'Online Learning Platform',
-            issueDate: '2023',
-            description: 'Specialized training covering modern React Hooks, Redux Toolkit, state architecture, and responsive Tailwind UI design.',
-            credentialUrl: '#',
+            _id: '6a6afa74b09be5e10955b578',
+            title: 'Node.js Industrial Training Workshop',
+            issuer: 'Outfox Technologies',
+            issueDate: '22 Apr 2026 – 06 May 2026',
+            description: 'Completed a 10-day industrial training workshop in Node.js conducted by Outfox Technologies. Strengthened practical knowledge of backend development, server-side JavaScript, APIs, and modern web application development.',
+            image: 'https://res.cloudinary.com/dzpihh1nu/image/upload/v1785395827/portfolio/dh2x6fumlpbfeddymnu9.jpg',
+            credentialUrl: 'https://res.cloudinary.com/dzpihh1nu/image/upload/v1785395827/portfolio/dh2x6fumlpbfeddymnu9.jpg',
         }
     ];
 
@@ -82,6 +75,16 @@ const Certifications = () => {
                                 <h3 className="text-xl sm:text-2xl font-bold font-heading text-slate-900 dark:text-white mb-3">
                                     {cert.title}
                                 </h3>
+
+                                {cert.image && (
+                                    <div className="mb-4 rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-950 max-h-60 flex items-center justify-center">
+                                        <img
+                                            src={cert.image}
+                                            alt={cert.title}
+                                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                        />
+                                    </div>
+                                )}
 
                                 <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
                                     {cert.description}

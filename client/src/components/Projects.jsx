@@ -27,40 +27,42 @@ const Projects = () => {
 
     const defaultProjects = [
         {
-            _id: 'default-p1',
-            title: 'Personal Portfolio & CMS Platform',
-            category: 'Full-Stack',
-            description: 'A full-stack responsive portfolio website with an integrated admin management dashboard to update skills, experience, and certificates in real time.',
-            challenge: 'Managing static content required redeploying code for every profile update.',
-            solution: 'Built a decoupled MERN stack application with Express REST API, MongoDB Mongoose models, Cloudinary media storage, and Redux Toolkit state management.',
+            _id: '6974a0849fc4cf2ec9a8516e',
+            title: 'Blinkeyit — Full-Stack E-Commerce Platform',
+            category: 'MERN Web App',
+            description: 'Developed a scalable e-commerce platform with secure authentication, Stripe payments, cart management, infinite scroll, debounced search, and order tracking.',
+            challenge: 'Managing complex cart state, responsive product search, and secure payment processing.',
+            solution: 'Built with MERN stack, Redux Toolkit state management, Stripe payment gateway, and Cloudinary media optimization.',
             outcomes: [
-                'Eliminated code redeployments for content updates',
-                'Secured admin dashboard with custom API authentication',
-                'Achieved 100/100 Lighthouse performance and accessibility scores',
-                'Deployed seamlessly on Vercel'
+                'Sub-100ms API response time for cart & product operations',
+                'Integrated Stripe checkout & Cloudinary image hosting',
+                'Built responsive admin dashboard for order processing',
+                'Deployed production frontend and backend on Vercel'
             ],
-            tags: ['React', 'Node.js', 'Express', 'MongoDB', 'Redux Toolkit', 'Tailwind CSS'],
+            image: 'https://res.cloudinary.com/dzpihh1nu/image/upload/v1769251855/portfolio/ngniodh7vy6cdays0crz.png',
+            tags: ['MERN Stack', 'Redux Toolkit', 'Tailwind CSS', 'Stripe', 'Cloudinary'],
             links: {
-                code: 'https://github.com/Vishnukr0007/portfolio-website-vishnu',
-                demo: 'https://portfolio-website-vishnu-6rmv.vercel.app'
+                code: 'https://github.com/Vishnukr0007/Blinkeyit-full-stack.git',
+                demo: 'https://blinkeyit-full-stack-sooty.vercel.app/'
             }
         },
         {
-            _id: 'default-p2',
-            title: 'Task & Workflow Manager App',
-            category: 'Web App',
-            description: 'Interactive web application designed to help users organize, prioritize, and track project tasks with real-time status updates.',
-            challenge: 'Complex task states caused UI re-rendering lags on larger lists.',
-            solution: 'Optimized state flow using Redux Toolkit slices, memoized components, and built REST endpoints for efficient CRUD operations.',
+            _id: '6974a3d29fc4cf2ec9a85171',
+            title: 'Netflix-GPT — AI Movie Recommendation App',
+            category: 'AI-Powered Web Application',
+            description: 'Built a Netflix-style movie browsing interface featuring Firebase authentication, OpenAI GPT personalized movie recommendations, and TMDB API metadata.',
+            challenge: 'Integrating dynamic natural language GPT suggestions with real-time movie API metadata.',
+            solution: 'Leveraged OpenAI GPT API with TMDB search endpoints and global Redux state.',
             outcomes: [
-                'Sub-100ms API response time for task status updates',
-                'Built responsive dashboard with filterable task categories',
-                'Integrated sweetalert & hot-toast interactive notifications'
+                'Personalized AI movie recommendations using GPT prompts',
+                'Firebase authentication for secure user sessions',
+                'Responsive Netflix-inspired hero banner and category carousels'
             ],
-            tags: ['React', 'Express', 'Node.js', 'MongoDB', 'REST API'],
+            image: 'https://res.cloudinary.com/dzpihh1nu/image/upload/v1769251793/portfolio/dmibb1iuazvzzdb8hy9u.png',
+            tags: ['React (Vite)', 'Tailwind CSS', 'Firebase', 'Redux', 'OpenAI GPT', 'TMDB API'],
             links: {
-                code: 'https://github.com/Vishnukr0007',
-                demo: '#'
+                code: 'https://netflix-gpt-6b7eb.web.app',
+                demo: 'https://netflix-gpt-theta-dusky.vercel.app/'
             }
         }
     ];
